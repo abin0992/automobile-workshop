@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" role="img" aria-label="Yokohama">
+  <title>Yokohama</title>
+  <rect x="1" y="1" width="218" height="78" rx="12" fill="#ffffff" stroke="#c8102e" stroke-opacity=".25" stroke-width="2"/>
+  <circle cx="40" cy="40" r="21" fill="none" stroke="#c8102e" stroke-width="7"/><circle cx="40" cy="40" r="8" fill="#c8102e"/>
+  <text x="74" y="41" font-family="Inter, Helvetica, Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="-0.5" fill="#c8102e" dominant-baseline="central">Yokohama</text>
+</svg>

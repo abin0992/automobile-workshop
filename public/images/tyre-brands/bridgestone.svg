@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" role="img" aria-label="Bridgestone">
+  <title>Bridgestone</title>
+  <rect x="1" y="1" width="218" height="78" rx="12" fill="#ffffff" stroke="#d4022a" stroke-opacity=".25" stroke-width="2"/>
+  <circle cx="40" cy="40" r="21" fill="none" stroke="#d4022a" stroke-width="7"/><circle cx="40" cy="40" r="8" fill="#d4022a"/>
+  <text x="74" y="41" font-family="Inter, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="-0.5" fill="#d4022a" dominant-baseline="central">Bridgestone</text>
+</svg>
