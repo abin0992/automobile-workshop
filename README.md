@@ -25,6 +25,9 @@ Then open <http://localhost:3000>.
 seeds the service catalogue, builds the app and serves it. Press `Ctrl-C` to
 stop everything.
 
+Already have a **Supabase** database? See
+[Running against Supabase](#running-against-supabase) instead.
+
 While you're iterating on the design, use the hot-reloading version instead:
 
 ```bash
@@ -60,6 +63,84 @@ npm run dev
 
 ---
 
+## Running against Supabase
+
+Supabase is plain PostgreSQL, so the app connects to it with no code changes —
+you only need the right connection string in `.env.local`.
+
+### 1. Copy your connection string
+
+In the Supabase dashboard go to **Project Settings → Database → Connection
+string** and choose the **URI** tab. You will see two kinds of host:
+
+| Connection type      | Host                                     | Port   | Use it for                          |
+| -------------------- | ---------------------------------------- | ------ | ----------------------------------- |
+| **Transaction pooler** | `aws-0-<region>.pooler.supabase.com`   | `6543` | The running app (recommended)       |
+| **Session pooler / direct** | `aws-0-<region>.pooler.supabase.com` or `db.<ref>.supabase.co` | `5432` | Schema migrations (`drizzle-kit`)   |
+
+Use the **pooler** for the app. This project uses `pg.Pool`, and Supabase's
+direct connection allows only a small number of concurrent connections, which a
+dev server will exhaust quickly.
+
+### 2. Create `.env.local`
+
+```bash
+DATABASE_URL="postgresql://postgres.<project-ref>:<your-password>@aws-0-<region>.pooler.supabase.com:6543/postgres?sslmode=require"
+```
+
+Notes that save a lot of debugging:
+
+- The username on the pooler is `postgres.<project-ref>`, **not** `postgres`.
+- Wrap the value **in double quotes** — Supabase passwords often contain `#`,
+  `?` or `&`, which otherwise truncate the string.
+- If your password contains `@`, `/`, `:` or `#`, percent-encode it
+  (`@` → `%40`, `#` → `%23`). Or just reset it to an alphanumeric password.
+- `?sslmode=require` is needed; Supabase refuses unencrypted connections.
+
+### 3. Create the tables
+
+`drizzle.config.ts` reads the same `DATABASE_URL` from `.env.local`, so this
+targets your Supabase project automatically:
+
+```bash
+npx drizzle-kit push
+```
+
+This creates the `services` and `bookings` tables. If it hangs or times out,
+switch the port in `DATABASE_URL` from `6543` to `5432` for this command only —
+the transaction pooler does not support every statement migrations need.
+
+You can confirm the tables exist under **Table Editor** in the dashboard.
+
+### 4. Run the app
+
+```bash
+npm run dev          # http://localhost:3000
+```
+
+The service catalogue seeds itself on first page load. Do **not** use
+`npm run preview` here — that starts the embedded database and ignores
+Supabase.
+
+### Supabase troubleshooting
+
+| Symptom | Cause and fix |
+| ------- | ------------- |
+| `password authentication failed` | Username must be `postgres.<project-ref>` on pooler ports, and special characters in the password need percent-encoding. |
+| `getaddrinfo ENOTFOUND` | Host copied incorrectly, or the project is paused — free projects pause after inactivity. Resume it in the dashboard. |
+| `no pg_hba.conf entry ... no encryption` | Add `?sslmode=require` to the URL. |
+| `self-signed certificate in certificate chain` | Corporate proxy intercepting TLS. Use `?sslmode=no-verify`. |
+| `too many clients already` | You are on the direct connection. Move to the pooler on port `6543`. |
+| `relation "services" does not exist` | Step 3 was skipped — run `npx drizzle-kit push`. |
+| `drizzle-kit push` hangs | Use the session pooler / direct port `5432` for migrations. |
+
+### Switching back to the embedded database
+
+Delete or comment out `DATABASE_URL` in `.env.local`, then run
+`npm run preview` as usual.
+
+---
+
 ## Scripts
 
 | Command               | What it does                                              |
@@ -81,7 +162,7 @@ Ports are configurable: `PORT=4000 PREVIEW_DB_PORT=5555 npm run preview`.
 
 | Variable                 | Required | Purpose                                                         |
 | ------------------------ | -------- | --------------------------------------------------------------- |
-| `DATABASE_URL`           | Yes      | Postgres connection string. Set automatically by the preview scripts. |
+| `DATABASE_URL`           | Yes      | Postgres connection string — Supabase, your own server, or set automatically by the preview scripts. |
 | `GOOGLE_PLACES_API_KEY`  | No       | Fetches live Google reviews. Falls back to a bundled snapshot when unset. |
 
 Put local values in `.env.local` (gitignored).
@@ -122,6 +203,7 @@ public/images/
   slider/                 Hero background photography
   car-brands/             Car marque logos
   tyre-brands/            Tyre brand logos
+drizzle.config.ts         Migration config — reads DATABASE_URL from .env.local
 scripts/
   preview.sh              One-command local preview
   preview-db.mjs          Embedded Postgres server
