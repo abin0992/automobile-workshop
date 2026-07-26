@@ -4,35 +4,51 @@ import { services } from "@/db/schema";
 import { inArray } from "drizzle-orm";
 import { formatPricePence } from "@/lib/format";
 import { ensureSeeded } from "@/lib/seed";
+import HeroSlider from "@/components/HeroSlider";
+import BrandMarquee from "@/components/BrandMarquee";
+import BrandGrid from "@/components/BrandGrid";
+import GoogleReviews from "@/components/GoogleReviews";
+import { CAR_BRANDS } from "@/lib/brands";
+import { getGoogleReviews } from "@/lib/reviews";
+import DatabaseNotice from "@/components/DatabaseNotice";
+
+const SLIDES = [
+  { src: "/images/slider/slider-1.jpg", alt: "Car raised on a two-post lift in our Middlesbrough workshop" },
+  { src: "/images/slider/slider-2.jpg", alt: "Technician carrying out a DVSA MOT test" },
+  { src: "/images/slider/slider-3.jpg", alt: "New tyres being fitted and balanced in our tyre bay" },
+  { src: "/images/slider/slider-4.jpg", alt: "Engine bay servicing and oil check" },
+];
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
-  await ensureSeeded();
-  const headlineSlugs = ["mot-test", "interim-service", "full-service", "major-service"];
-  const rows = await db
-    .select()
-    .from(services)
-    .where(inArray(services.slug, headlineSlugs));
+type ServiceRow = typeof services.$inferSelect;
 
-  const byslug = new Map(rows.map((r) => [r.slug, r]));
-  const cards = headlineSlugs
-    .map((s) => byslug.get(s))
-    .filter((s): s is (typeof rows)[number] => Boolean(s));
+/**
+ * The marketing page must render even if the database is unreachable, so a
+ * connection failure degrades the pricing grid rather than 500-ing the site.
+ */
+async function loadHeadlineServices(slugs: string[]): Promise<ServiceRow[] | null> {
+  try {
+    await ensureSeeded();
+    const rows = await db.select().from(services).where(inArray(services.slug, slugs));
+    const byslug = new Map(rows.map((r) => [r.slug, r]));
+    return slugs.map((s) => byslug.get(s)).filter((s): s is ServiceRow => Boolean(s));
+  } catch (error) {
+    console.error("[home] could not load services:", error);
+    return null;
+  }
+}
+
+export default async function HomePage() {
+  const reviews = await getGoogleReviews();
+  const headlineSlugs = ["mot-test", "interim-service", "full-service", "major-service"];
+  const cards = await loadHeadlineServices(headlineSlugs);
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.35), transparent 50%), radial-gradient(circle at 80% 60%, rgba(59,130,246,0.25), transparent 55%)",
-          }}
-        />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+      {/* Hero with image slider background */}
+      <HeroSlider slides={SLIDES}>
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-amber-300">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> DVSA Approved MOT Station
@@ -61,7 +77,7 @@ export default async function HomePage() {
             <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6 text-sm">
               <div>
                 <dt className="text-slate-400">Reviews</dt>
-                <dd className="mt-1 text-xl font-semibold">4.9 ★</dd>
+                <dd className="mt-1 text-xl font-semibold">{reviews.rating.toFixed(1)} ★</dd>
               </div>
               <div>
                 <dt className="text-slate-400">Since</dt>
@@ -102,6 +118,43 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
+      </HeroSlider>
+
+      {/* We repair all car brands */}
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-medium uppercase tracking-wider text-amber-600">
+              All makes &amp; models
+            </p>
+            <h2 className="mt-2 text-3xl font-bold text-slate-950 sm:text-4xl">
+              We repair <span className="text-amber-500">all car brands</span>
+            </h2>
+            <p className="mt-4 text-slate-600">
+              From everyday hatchbacks to prestige German saloons, our
+              dealer-trained technicians service, MOT and repair every marque on
+              UK roads — using genuine or OE-matching parts, with your
+              manufacturer warranty protected.
+            </p>
+          </div>
+
+          <div className="mt-10">
+            <BrandMarquee brands={CAR_BRANDS} />
+            <BrandMarquee brands={[...CAR_BRANDS].reverse()} speedSeconds={55} />
+          </div>
+
+          <div className="mt-10 hidden md:block">
+            <BrandGrid brands={CAR_BRANDS.slice(0, 12)} />
+          </div>
+
+          <p className="mt-8 text-center text-sm text-slate-500">
+            Don&apos;t see your badge? We work on it too —{" "}
+            <Link href="/contact" className="font-semibold text-slate-800 underline underline-offset-4">
+              ask us about your vehicle
+            </Link>
+            .
+          </p>
+        </div>
       </section>
 
       {/* Services grid */}
@@ -123,6 +176,11 @@ export default async function HomePage() {
           </Link>
         </div>
 
+        {cards === null ? (
+          <div className="mt-8">
+            <DatabaseNotice />
+          </div>
+        ) : (
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map((s) => (
             <div
@@ -146,6 +204,7 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
+        )}
       </section>
 
       {/* Trust strip */}
@@ -180,6 +239,9 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Google reviews */}
+      <GoogleReviews summary={reviews} />
     </main>
   );
 }
