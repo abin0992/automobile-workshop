@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" role="img" aria-label="Ford">
-  <title>Ford</title>
-  <rect x="1" y="1" width="218" height="78" rx="12" fill="#ffffff" stroke="#003478" stroke-opacity=".25" stroke-width="2"/>
-  <circle cx="40" cy="40" r="22" fill="#003478"/><text x="40" y="40" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">F</text>
-  <text x="74" y="41" font-family="Inter, Helvetica, Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="-0.5" fill="#003478" dominant-baseline="central">Ford</text>
-</svg>
