@@ -18,7 +18,7 @@ const SLIDES = [
   { src: "/images/slider/slider-4.jpg", alt: "Engine bay servicing and oil check" },
 ];
 
-/** Three scrolling rows, so all 60 marques are shown without repeats. */
+/** Three scrolling rows, so every marque is shown without repeats. */
 const BRAND_ROWS = splitIntoRows(CAR_BRANDS, 3);
 
 export const dynamic = "force-dynamic";
