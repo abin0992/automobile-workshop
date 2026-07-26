@@ -10,6 +10,7 @@ import BrandGrid from "@/components/BrandGrid";
 import GoogleReviews from "@/components/GoogleReviews";
 import { CAR_BRANDS } from "@/lib/brands";
 import { getGoogleReviews } from "@/lib/reviews";
+import DatabaseNotice from "@/components/DatabaseNotice";
 
 const SLIDES = [
   { src: "/images/slider/slider-1.jpg", alt: "Car raised on a two-post lift in our Middlesbrough workshop" },
@@ -20,19 +21,28 @@ const SLIDES = [
 
 export const dynamic = "force-dynamic";
 
+type ServiceRow = typeof services.$inferSelect;
+
+/**
+ * The marketing page must render even if the database is unreachable, so a
+ * connection failure degrades the pricing grid rather than 500-ing the site.
+ */
+async function loadHeadlineServices(slugs: string[]): Promise<ServiceRow[] | null> {
+  try {
+    await ensureSeeded();
+    const rows = await db.select().from(services).where(inArray(services.slug, slugs));
+    const byslug = new Map(rows.map((r) => [r.slug, r]));
+    return slugs.map((s) => byslug.get(s)).filter((s): s is ServiceRow => Boolean(s));
+  } catch (error) {
+    console.error("[home] could not load services:", error);
+    return null;
+  }
+}
+
 export default async function HomePage() {
-  await ensureSeeded();
   const reviews = await getGoogleReviews();
   const headlineSlugs = ["mot-test", "interim-service", "full-service", "major-service"];
-  const rows = await db
-    .select()
-    .from(services)
-    .where(inArray(services.slug, headlineSlugs));
-
-  const byslug = new Map(rows.map((r) => [r.slug, r]));
-  const cards = headlineSlugs
-    .map((s) => byslug.get(s))
-    .filter((s): s is (typeof rows)[number] => Boolean(s));
+  const cards = await loadHeadlineServices(headlineSlugs);
 
   return (
     <main>
@@ -166,6 +176,11 @@ export default async function HomePage() {
           </Link>
         </div>
 
+        {cards === null ? (
+          <div className="mt-8">
+            <DatabaseNotice />
+          </div>
+        ) : (
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map((s) => (
             <div
@@ -189,6 +204,7 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
+        )}
       </section>
 
       {/* Trust strip */}

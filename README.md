@@ -209,6 +209,33 @@ from the prompt so pages render correctly once you are through it.
 | **Render** | Free web services sleep after ~15 min idle, so the first visit takes 30–60s to wake. Fine for occasional internal use, poor first impression. |
 | **Cloudflare Workers** | Free and fast, but this app needs the Node runtime and an adapter — more setup than it is worth here. |
 
+### "This page couldn't load — a server error occurred"
+
+Almost always the deployed app cannot reach the database. Open
+**`https://<your-site>.netlify.app/api/health`** — it returns a plain-English
+diagnosis rather than an opaque error code, for example:
+
+```json
+{ "ok": false, "stage": "schema",
+  "problem": "Connected to the database, but the tables are missing.",
+  "fix": "Run `npx drizzle-kit push` locally with the same DATABASE_URL to create them." }
+```
+
+The two most common causes:
+
+1. **Tables were never created.** Put your Supabase `DATABASE_URL` in
+   `.env.local` locally and run `npx drizzle-kit push`, then reload the site.
+2. **Wrong connection string.** Netlify runs serverless, so use the Supabase
+   **transaction pooler** host on port `6543` with `?sslmode=require`, and
+   remember the username is `postgres.<project-ref>`.
+
+After changing an environment variable in Netlify you must **redeploy** —
+variables are baked in at build time, so saving alone does not apply them.
+
+Pages no longer fail outright when the database is down: the marketing content
+still renders and only the pricing section shows a notice, so a bad connection
+never takes the whole site offline.
+
 ### Deployment troubleshooting
 
 | Symptom | Fix |
