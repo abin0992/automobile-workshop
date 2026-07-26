@@ -6,8 +6,9 @@
     "preview": "./scripts/preview.sh",
     "preview:dev": "./scripts/preview.sh dev",
     "preview:db": "node scripts/preview-db.mjs",
-    "build": "next build",
+    "build": "npm run check:logos && next build",
     "start": "next start",
+    "check:logos": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-logos.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
