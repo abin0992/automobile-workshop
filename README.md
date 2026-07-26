@@ -141,6 +141,86 @@ Delete or comment out `DATABASE_URL` in `.env.local`, then run
 
 ---
 
+## Deploying to the cloud (free)
+
+To share a link with a non-technical colleague, deploy to **Netlify**. It pulls
+directly from a chosen Git branch, rebuilds on every push, and gives you a URL
+like `https://marton-road-mot.netlify.app`.
+
+**Why Netlify and not Vercel here:** Vercel's free Hobby plan is restricted to
+personal, *non-commercial* use, and a business website falls outside that even
+at zero traffic. Netlify's free Starter plan permits commercial use, and it
+officially supports Next.js 16 (this project's version) via its auto-installed
+Next.js runtime. Your Supabase database is separate and stays free.
+
+### 1. Connect the repository
+
+1. Sign in to [netlify.com](https://netlify.com) with GitHub.
+2. **Add new site → Import an existing project** → pick this repository.
+3. Netlify detects Next.js and fills in the build command and publish
+   directory. `netlify.toml` in this repo already pins them plus Node 22.
+
+### 2. Choose the branch
+
+Under **Site configuration → Build & deploy → Branches and deploy contexts**,
+set the **production branch** to the branch you want live — for example
+`arena/019fa038-automobile-workshop` rather than `main`. Every push to that
+branch redeploys automatically.
+
+### 3. Add environment variables
+
+**Site configuration → Environment variables.** At minimum:
+
+| Key | Value |
+| --- | ----- |
+| `DATABASE_URL` | Your Supabase **transaction pooler** URI (port `6543`, with `?sslmode=require`) |
+
+Optional: `GOOGLE_PLACES_API_KEY` for live reviews, and `SITE_PASSWORD` /
+`SITE_USERNAME` for the password gate below.
+
+Run `npx drizzle-kit push` once from your machine (with the same
+`DATABASE_URL` in `.env.local`) so the tables exist before the first visit.
+
+### 4. Deploy
+
+Trigger a deploy and share the resulting URL. Nothing to install at the other
+end — it opens in any browser, on phone or desktop.
+
+### Keeping it private (internal use only)
+
+The deployed URL is public and guessable by search engines. Netlify's built-in
+password protection is a paid feature, so this project includes a free
+alternative: set **`SITE_PASSWORD`** (and optionally `SITE_USERNAME`, default
+`team`) in the Netlify environment variables and redeploy.
+
+Visitors then get a browser username/password prompt before seeing anything.
+Send your colleague the URL plus those two words. With `SITE_PASSWORD` unset
+the gate is disabled entirely, so local development is unaffected.
+
+The logic lives in `src/proxy.ts`. Static images are intentionally excluded
+from the prompt so pages render correctly once you are through it.
+
+### Alternatives considered
+
+| Platform | Free tier verdict |
+| -------- | ----------------- |
+| **Netlify** | Recommended — commercial use allowed, Next.js 16 supported, deploys from any branch. |
+| **Vercel** | Best Next.js support, but Hobby forbids commercial use; needs Pro at $20/mo. |
+| **Render** | Free web services sleep after ~15 min idle, so the first visit takes 30–60s to wake. Fine for occasional internal use, poor first impression. |
+| **Cloudflare Workers** | Free and fast, but this app needs the Node runtime and an adapter — more setup than it is worth here. |
+
+### Deployment troubleshooting
+
+| Symptom | Fix |
+| ------- | --- |
+| Build fails on `DATABASE_URL is required` | The variable is missing in Netlify's environment settings. |
+| Site loads but pages 500 | Tables not created — run `npx drizzle-kit push` against Supabase. |
+| `too many clients already` | Use the pooler URI on port `6543`, not the direct connection. |
+| Colleague sees a login box unexpectedly | `SITE_PASSWORD` is set. Share the credentials, or remove the variable to make it open. |
+| Pushes do not redeploy | The production branch in Netlify does not match the branch you are pushing to. |
+
+---
+
 ## Scripts
 
 | Command               | What it does                                              |
@@ -164,6 +244,8 @@ Ports are configurable: `PORT=4000 PREVIEW_DB_PORT=5555 npm run preview`.
 | ------------------------ | -------- | --------------------------------------------------------------- |
 | `DATABASE_URL`           | Yes      | Postgres connection string — Supabase, your own server, or set automatically by the preview scripts. |
 | `GOOGLE_PLACES_API_KEY`  | No       | Fetches live Google reviews. Falls back to a bundled snapshot when unset. |
+| `SITE_PASSWORD`          | No       | Enables a Basic Auth prompt on every page. Unset means the site is open. |
+| `SITE_USERNAME`          | No       | Username for that prompt. Defaults to `team`.                     |
 
 Put local values in `.env.local` (gitignored).
 
@@ -197,6 +279,7 @@ src/
     BrandMarquee.tsx      Scrolling logo wall
     BrandGrid.tsx         Static logo grid
     GoogleReviews.tsx     Google review cards and rating summary
+  proxy.ts                Optional Basic Auth gate for internal deployments
   db/                     Drizzle schema and connection pool
   lib/                    availability, seed data, brands, reviews, formatting
 public/images/
@@ -204,6 +287,7 @@ public/images/
   car-brands/             Car marque logos
   tyre-brands/            Tyre brand logos
 drizzle.config.ts         Migration config — reads DATABASE_URL from .env.local
+netlify.toml              Netlify build settings
 scripts/
   preview.sh              One-command local preview
   preview-db.mjs          Embedded Postgres server
