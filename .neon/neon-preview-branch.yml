@@ -1,0 +1,106 @@
+# Creates an isolated Neon database branch for every pull request, applies the
+# Drizzle schema to it, and deletes the branch again when the PR closes.
+#
+# One-time setup in the GitHub repository settings:
+#
+#   Variables → NEON_PROJECT_ID   your Neon project ID
+#   Secrets   → NEON_API_KEY      a Neon API key with access to that project
+#
+# The connection string for the per-PR branch is exposed to later steps as
+# `steps.create_neon_branch.outputs.db_url_with_pooler`. It contains a username
+# and password, so it must never be echoed or written to the build log.
+name: Neon — preview branch per PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+# Only the latest push to a PR should hold the branch, otherwise two runs race
+# to create and delete the same Neon branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+# Least privilege: the workflow only reads the repo and comments on the PR.
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.branch_name.outputs.current_branch }}
+    steps:
+      - name: Get branch name
+        id: branch_name
+        uses: tj-actions/branch-names@v8
+
+  create_neon_branch:
+    name: Create Neon branch
+    needs: setup
+    if: |
+      github.event_name == 'pull_request' && (
+      github.event.action == 'synchronize'
+      || github.event.action == 'opened'
+      || github.event.action == 'reopened')
+    runs-on: ubuntu-latest
+    steps:
+      # Preview branches are disposable. Expiring them after two weeks stops
+      # abandoned PRs from accumulating against the project's branch quota.
+      - name: Compute branch expiry (14 days from now)
+        run: echo "EXPIRES_AT=$(date -u --date '+14 days' +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+
+      - name: Create Neon branch
+        id: create_neon_branch
+        uses: neondatabase/create-branch-action@v6
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          expires_at: ${{ env.EXPIRES_AT }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # `drizzle-kit push` reconciles the branch with src/db/schema.ts. The
+      # unpooled URL is used deliberately: the transaction pooler does not
+      # support every statement a migration issues.
+      - name: Apply schema to the preview branch
+        run: npx drizzle-kit push --force
+        env:
+          DATABASE_URL: ${{ steps.create_neon_branch.outputs.db_url }}
+
+      - name: Post schema diff to the PR
+        uses: neondatabase/schema-diff-action@v1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          compare_branch: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+  delete_neon_branch:
+    name: Delete Neon branch
+    needs: setup
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Neon branch
+        uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+          api_key: ${{ secrets.NEON_API_KEY }}

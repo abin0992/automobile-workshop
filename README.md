@@ -123,8 +123,13 @@ certificate.
 
 ### Preview branch per pull request
 
-`.github/workflows/neon-preview-branch.yml` gives every PR its own isolated
-copy of the database:
+`.neon/neon-preview-branch.yml` gives every PR its own isolated copy of the
+database. **It is not active yet** — it ships outside `.github/workflows/`
+because the GitHub App used to push this branch lacks the `workflows`
+permission. See [`.neon/README.md`](.neon/README.md) for the one-command
+install.
+
+What it does:
 
 - **PR opened / updated** — creates a Neon branch `preview/pr-<n>-<branch>`,
   applies `src/db/schema.ts` to it with `drizzle-kit push`, and comments the
