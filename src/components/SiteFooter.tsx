@@ -19,12 +19,11 @@ export default function SiteFooter() {
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-1">
-          {/* The footer has room for the full lockup including the strapline. */}
           <Image
             src="/images/brand/logo.png"
             alt="Marton Road MOT Centre"
-            width={644}
-            height={600}
+            width={980}
+            height={760}
             className="h-24 w-auto"
           />
           <p className="mt-4 text-sm leading-relaxed">

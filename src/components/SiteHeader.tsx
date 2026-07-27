@@ -78,27 +78,20 @@ export default function SiteHeader() {
             aria-label="Marton Road MOT Centre — home"
           >
             {/*
-              The compact lockup (shield + car + M.R/MOT, without the long
-              "Marton Road MOT Centre" strapline) is used here: at header size
-              the full wordmark renders as an illegible smudge, so the
-              strapline is set as live text alongside it instead.
+              The full shield lockup. It already contains the "Marton Road MOT
+              Centre" strapline, so no wordmark is set beside it — repeating
+              the name would be redundant. It is given a generous height here
+              because the strapline inside the badge stops being readable much
+              below this size.
             */}
             <Image
-              src="/images/brand/logo-compact.png"
+              src="/images/brand/logo.png"
               alt="Marton Road MOT Centre"
-              width={556}
-              height={480}
+              width={980}
+              height={760}
               priority
-              className="h-12 w-auto sm:h-16"
+              className="h-14 w-auto sm:h-[4.5rem]"
             />
-            <span className="hidden leading-tight sm:block">
-              <span className="block font-display text-lg font-extrabold uppercase tracking-wide text-white">
-                Marton Road
-              </span>
-              <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-brand-500">
-                MOT Centre
-              </span>
-            </span>
           </Link>
 
           <nav className="hidden lg:block">

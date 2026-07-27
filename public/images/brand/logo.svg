@@ -1,66 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 790" width="1000" height="790">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1560 1120" width="1560" height="1120">
   <defs>
     <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0"    stop-color="#ffffff"/>
-      <stop offset="0.16" stop-color="#eaeff1"/>
-      <stop offset="0.40" stop-color="#a2b0b5"/>
-      <stop offset="0.52" stop-color="#7d8d93"/>
-      <stop offset="0.64" stop-color="#bcc8cc"/>
-      <stop offset="0.86" stop-color="#e6ecee"/>
-      <stop offset="1"    stop-color="#a7b3b7"/>
+      <stop offset="0.14" stop-color="#f0f4f5"/>
+      <stop offset="0.34" stop-color="#b9c5c9"/>
+      <stop offset="0.50" stop-color="#8b989e"/>
+      <stop offset="0.60" stop-color="#c9d4d8"/>
+      <stop offset="0.80" stop-color="#eef3f4"/>
+      <stop offset="1"    stop-color="#9fadb2"/>
     </linearGradient>
 
     <linearGradient id="chromeBar" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0"    stop-color="#f6fafb"/>
-      <stop offset="0.42" stop-color="#c6d2d6"/>
-      <stop offset="0.56" stop-color="#8a989e"/>
-      <stop offset="1"    stop-color="#e2e9eb"/>
+      <stop offset="0"    stop-color="#fdfefe"/>
+      <stop offset="0.38" stop-color="#d2dcdf"/>
+      <stop offset="0.58" stop-color="#93a1a7"/>
+      <stop offset="1"    stop-color="#e8eef0"/>
     </linearGradient>
 
-    <linearGradient id="carBody" x1="0.2" y1="0" x2="0.45" y2="1">
+    <linearGradient id="carBody" x1="0.15" y1="0" x2="0.42" y2="1">
       <stop offset="0"    stop-color="#ffffff"/>
-      <stop offset="0.32" stop-color="#dde4e8"/>
-      <stop offset="0.60" stop-color="#9aa8ae"/>
-      <stop offset="0.82" stop-color="#75838a"/>
-      <stop offset="1"    stop-color="#5a686e"/>
+      <stop offset="0.26" stop-color="#e8eef0"/>
+      <stop offset="0.52" stop-color="#aab8be"/>
+      <stop offset="0.74" stop-color="#859399"/>
+      <stop offset="1"    stop-color="#6d7b86"/>
     </linearGradient>
 
     <linearGradient id="starGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0"   stop-color="#f4f8f9"/>
-      <stop offset="0.5" stop-color="#adbabf"/>
-      <stop offset="1"   stop-color="#76848a"/>
+      <stop offset="0"   stop-color="#f2f6f7"/>
+      <stop offset="0.48" stop-color="#b9c5c9"/>
+      <stop offset="0.54" stop-color="#8e9ba1"/>
+      <stop offset="1"   stop-color="#c8d2d6"/>
     </linearGradient>
 
     <linearGradient id="limeGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0"   stop-color="#8ee04a"/>
-      <stop offset="1"   stop-color="#61c024"/>
+      <stop offset="0"   stop-color="#8ff24a"/>
+      <stop offset="1"   stop-color="#78e02f"/>
     </linearGradient>
   </defs>
 
-  <!-- ══ Crown ═══════════════════════════════════════════════════════ -->
+  <!-- ══ Crown: pointed gable with flared shoulders ══════════════════ -->
   <path fill="url(#chrome)" d="
-    M 500 84
-    C 612 84 714 120 782 172
-    L 806 191 L 806 316 L 872 316 L 872 470 L 792 470 L 792 342 L 726 342 L 726 226
-    C 664 184 586 160 500 160
-    C 414 160 336 184 274 226
-    L 274 342 L 208 342 L 208 470 L 128 470 L 128 316 L 194 316 L 194 191
-    L 218 172 C 286 120 388 84 500 84 Z"/>
+    M 780 116
+    L 1258 300
+    L 1258 470
+    L 1330 452 L 1372 500
+    L 1258 500 L 1258 486
+    L 1258 300
+    L 780 128
+    L 302 300
+    L 302 486 L 302 500
+    L 188 500 L 230 452 L 302 470
+    L 302 300 Z"/>
 
-  <path fill="#232a2d" d="
-    M 500 116
-    C 602 116 696 148 758 196
-    L 776 210 L 776 348 L 840 348 L 840 442 L 822 442 L 822 372 L 756 372 L 756 244
-    C 688 200 598 176 500 176
-    C 402 176 312 200 244 244
-    L 244 372 L 178 372 L 178 442 L 160 442 L 160 348 L 224 348 L 224 210
-    L 242 196 C 304 148 398 116 500 116 Z"/>
+  <!-- Outer gable stroke -->
+  <path fill="none" stroke="url(#chrome)" stroke-width="30" stroke-linejoin="round" d="
+    M 302 486 L 302 306 L 780 130 L 1258 306 L 1258 486"/>
 
-  <!-- Banner -->
-  <path fill="#232a2d" d="M 132 342 L 868 342 L 868 612 L 132 612 Z"/>
+  <!-- Inner dark gable face -->
+  <path fill="#101314" d="
+    M 780 168 L 1222 330 L 1222 700 L 338 700 L 338 330 Z"/>
+
+  <!-- Inner thin chrome outline following the gable -->
+  <path fill="none" stroke="#9fadb2" stroke-width="7" d="
+    M 356 500 L 356 344 L 780 188 L 1204 344 L 1204 500"/>
+
+  <!-- Flared shoulder tabs -->
+  <path fill="url(#chrome)" d="M 188 500 L 302 470 L 302 500 Z"/>
+  <path fill="url(#chrome)" d="M 1372 500 L 1258 470 L 1258 500 Z"/>
+
+  <!-- ══ Banner ══════════════════════════════════════════════════════ -->
+  <path fill="#101314" d="M 186 500 L 1374 500 L 1374 700 L 186 700 Z"/>
 
   <!-- ══ Car silhouette ══════════════════════════════════════════════ -->
-  <g transform="translate(500,272) scale(0.60) translate(-450,-124)">
+  <g transform="translate(780,368) scale(0.86) translate(-450,-124)">
     <g fill="url(#carBody)">
       <path d="M 30 150 L 140 150 L 118 170 L 8 170 Z"/>
       <path d="M 62 182 L 158 182 L 140 200 L 44 200 Z"/>
@@ -85,45 +97,53 @@
       M 246 220 a 52 52 0 0 1 104 0 Z
       M 612 220 a 52 52 0 0 1 104 0 Z"/>
 
-    <path fill="#232a2d" d="
+    <path fill="#101314" d="
       M 424 106 C 452 103 484 101 516 101 L 546 172 L 338 172
       C 360 150 392 126 424 106 Z"/>
-    <path fill="#232a2d" d="
+    <path fill="#101314" d="
       M 556 102 C 612 106 664 120 710 140 C 736 152 758 164 776 176 L 586 176 Z"/>
   </g>
 
-  <!-- ══ Banner chrome edges ═════════════════════════════════════════ -->
-  <rect x="124" y="330" width="752" height="14" rx="7" fill="url(#chromeBar)"/>
-  <rect x="124" y="602" width="752" height="20" rx="10" fill="url(#chromeBar)"/>
+  <!-- ══ Type ════════════════════════════════════════════════════════ -->
+
+  <!-- M.R -->
+  <text x="780" y="268" text-anchor="middle"
+        font-family="BarlowCondItalic" font-weight="800" font-size="132"
+        fill="#8ff24a" stroke="#ffffff" stroke-width="7" paint-order="stroke"
+        letter-spacing="6">M.R</text>
+
+  <!-- MOT -->
+  <text x="780" y="610" text-anchor="middle"
+        font-family="BarlowCondItalic" font-weight="800" font-size="248"
+        fill="#8ff24a" stroke="#ffffff" stroke-width="13" paint-order="stroke"
+        letter-spacing="6">MOT</text>
+
+  <!-- Strapline -->
+  <text x="780" y="700" text-anchor="middle"
+        font-family="BarlowCondItalic" font-weight="700" font-size="82"
+        fill="#ffffff" letter-spacing="2">MARTON ROAD MOT CENTRE</text>
+
+  <!-- ══ Chrome divider bar ══════════════════════════════════════════ -->
+  <rect x="186" y="716" width="1188" height="26" rx="13" fill="url(#chromeBar)"/>
 
   <!-- ══ Lower lime shield ═══════════════════════════════════════════ -->
+  <path fill="#101314" d="
+    M 404 748 L 1156 748 L 1156 906
+    C 1156 906 986 1030 780 1030
+    C 574 1030 404 906 404 906 Z"/>
   <path fill="url(#chrome)" d="
-    M 246 616 L 754 616 L 754 706
-    C 754 706 646 784 500 784
-    C 354 784 246 706 246 706 Z"/>
+    M 416 754 L 1144 754 L 1144 900
+    C 1144 900 980 1018 780 1018
+    C 580 1018 416 900 416 900 Z"/>
   <path fill="url(#limeGrad)" d="
-    M 270 634 L 730 634 L 730 696
-    C 730 696 632 764 500 764
-    C 368 764 270 696 270 696 Z"/>
+    M 442 762 L 1118 762 L 1118 890
+    C 1118 890 966 992 780 992
+    C 594 992 442 890 442 890 Z"/>
 
-  <!-- ══ Type ════════════════════════════════════════════════════════ -->
-  <text x="500" y="244" text-anchor="middle"
-        font-family="Barlow Condensed" font-weight="800" font-size="104"
-        fill="#7ede3c" stroke="#ffffff" stroke-width="5" paint-order="stroke"
-        letter-spacing="3">M.R</text>
-
-  <text x="500" y="492" text-anchor="middle"
-        font-family="Barlow Condensed" font-weight="800" font-size="196"
-        fill="#7ede3c" stroke="#ffffff" stroke-width="10" paint-order="stroke"
-        letter-spacing="2">MOT</text>
-
-  <text x="500" y="578" text-anchor="middle"
-        font-family="Barlow Condensed" font-weight="700" font-size="68"
-        fill="#ffffff" letter-spacing="1.5">MARTON ROAD MOT CENTRE</text>
-
-  <g fill="url(#starGrad)" stroke="#5f6d73" stroke-width="2.5">
-    <path transform="translate(408,692) scale(0.82)" d="M 0 -44 L 12.4 -13.6 L 44 -13.6 L 18.4 6.4 L 27.6 38 L 0 19.2 L -27.6 38 L -18.4 6.4 L -44 -13.6 L -12.4 -13.6 Z"/>
-    <path transform="translate(500,696) scale(1.0)"  d="M 0 -44 L 12.4 -13.6 L 44 -13.6 L 18.4 6.4 L 27.6 38 L 0 19.2 L -27.6 38 L -18.4 6.4 L -44 -13.6 L -12.4 -13.6 Z"/>
-    <path transform="translate(592,692) scale(0.82)" d="M 0 -44 L 12.4 -13.6 L 44 -13.6 L 18.4 6.4 L 27.6 38 L 0 19.2 L -27.6 38 L -18.4 6.4 L -44 -13.6 L -12.4 -13.6 Z"/>
+  <!-- Three chrome stars -->
+  <g fill="url(#starGrad)" stroke="#6f7d83" stroke-width="4">
+    <path transform="translate(628,872) scale(1.06)" d="M 0 -52 L 14.7 -16.1 L 52 -16.1 L 21.8 7.6 L 32.6 45 L 0 22.7 L -32.6 45 L -21.8 7.6 L -52 -16.1 L -14.7 -16.1 Z"/>
+    <path transform="translate(780,876) scale(1.24)" d="M 0 -52 L 14.7 -16.1 L 52 -16.1 L 21.8 7.6 L 32.6 45 L 0 22.7 L -32.6 45 L -21.8 7.6 L -52 -16.1 L -14.7 -16.1 Z"/>
+    <path transform="translate(932,872) scale(1.06)" d="M 0 -52 L 14.7 -16.1 L 52 -16.1 L 21.8 7.6 L 32.6 45 L 0 22.7 L -32.6 45 L -21.8 7.6 L -52 -16.1 L -14.7 -16.1 Z"/>
   </g>
 </svg>

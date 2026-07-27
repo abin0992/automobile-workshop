@@ -128,7 +128,7 @@ export default async function HomePage() {
               </a>
             </div>
 
-            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-white/10 pt-6">
+            <dl className="mt-10 grid max-w-sm grid-cols-2 gap-4 border-t border-white/10 pt-6">
               <div>
                 <dt className="text-xs uppercase tracking-wider text-carbon-400">Google rating</dt>
                 <dd className="mt-1 font-display text-3xl font-extrabold text-white">
@@ -140,12 +140,6 @@ export default async function HomePage() {
                 <dt className="text-xs uppercase tracking-wider text-carbon-400">Warranty</dt>
                 <dd className="mt-1 font-display text-3xl font-extrabold text-white">
                   6<span className="text-lg text-carbon-400"> mo</span>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wider text-carbon-400">MOT re-test</dt>
-                <dd className="mt-1 font-display text-3xl font-extrabold text-white">
-                  Free
                 </dd>
               </div>
             </dl>
