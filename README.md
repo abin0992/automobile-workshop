@@ -124,10 +124,15 @@ certificate.
 ### Preview branch per pull request
 
 `.neon/neon-preview-branch.yml` gives every PR its own isolated copy of the
-database. **It is not active yet** — it ships outside `.github/workflows/`
-because the GitHub App used to push this branch lacks the `workflows`
-permission. See [`.neon/README.md`](.neon/README.md) for the one-command
-install.
+database. **It is not active yet.** GitHub blocks any credential without the
+`workflows` permission from creating files under `.github/workflows/`, and the
+App that pushed this branch does not have it. Activate it with:
+
+```bash
+./.neon/install-workflow.sh
+```
+
+See [`.neon/README.md`](.neon/README.md) for details and the web-UI fallback.
 
 What it does:
 

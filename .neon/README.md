@@ -9,20 +9,24 @@ The GitHub App used to push this branch does not hold the `workflows`
 permission, so GitHub rejects any push that creates or edits a file under
 `.github/workflows/`. The workflow is therefore parked here, ready to install.
 
+This is a GitHub platform restriction, not a repository setting — it applies
+to `git push` and to every REST write path alike, so it cannot be worked
+around from here. It takes one command from you.
+
 ## Installing it
 
-Either copy it into place locally and push with your own credentials:
+Run this from a clone where you are authenticated as yourself:
 
 ```bash
-mkdir -p .github/workflows
-git mv .neon/neon-preview-branch.yml .github/workflows/
-git commit -m "Add Neon preview-branch workflow"
-git push
+./.neon/install-workflow.sh
 ```
 
-…or paste the file's contents into **Actions → New workflow → set up a
-workflow yourself** in the GitHub web UI, which is not subject to the same
-restriction.
+That moves the file into `.github/workflows/`, commits it and pushes. Use
+`--no-push` to stop after the commit.
+
+If your own credential also lacks the `workflows` permission, paste the file's
+contents into **Actions → New workflow → set up a workflow yourself** in the
+GitHub web UI instead — the web editor is not subject to the restriction.
 
 ## Required repository configuration
 
