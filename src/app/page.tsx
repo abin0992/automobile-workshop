@@ -6,9 +6,8 @@ import { formatPricePence } from "@/lib/format";
 import { ensureSeeded } from "@/lib/seed";
 import HeroSlider from "@/components/HeroSlider";
 import BrandMarquee from "@/components/BrandMarquee";
-import BrandGrid from "@/components/BrandGrid";
 import GoogleReviews from "@/components/GoogleReviews";
-import { CAR_BRANDS } from "@/lib/brands";
+import { CAR_BRANDS, splitIntoRows } from "@/lib/brands";
 import { getGoogleReviews } from "@/lib/reviews";
 import DatabaseNotice from "@/components/DatabaseNotice";
 
@@ -18,6 +17,9 @@ const SLIDES = [
   { src: "/images/slider/slider-3.jpg", alt: "New tyres being fitted and balanced in our tyre bay" },
   { src: "/images/slider/slider-4.jpg", alt: "Engine bay servicing and oil check" },
 ];
+
+/** Three scrolling rows, so every marque is shown without repeats. */
+const BRAND_ROWS = splitIntoRows(CAR_BRANDS, 3);
 
 export const dynamic = "force-dynamic";
 
@@ -138,13 +140,20 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10">
-            <BrandMarquee brands={CAR_BRANDS} />
-            <BrandMarquee brands={[...CAR_BRANDS].reverse()} speedSeconds={55} />
-          </div>
-
-          <div className="mt-10 hidden md:block">
-            <BrandGrid brands={CAR_BRANDS.slice(0, 12)} />
+          {/*
+            Every badge we hold artwork for is dealt across the rows, so each
+            one appears exactly once and each row scrolls. Alternating the
+            direction keeps the wall lively without duplicating any marque.
+          */}
+          <div className="mt-10 space-y-4">
+            {BRAND_ROWS.map((row, i) => (
+              <BrandMarquee
+                key={i}
+                brands={row}
+                speedSeconds={55 + i * 10}
+                reverse={i % 2 === 1}
+              />
+            ))}
           </div>
 
           <p className="mt-8 text-center text-sm text-slate-500">

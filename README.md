@@ -318,15 +318,31 @@ netlify.toml              Netlify build settings
 scripts/
   preview.sh              One-command local preview
   preview-db.mjs          Embedded Postgres server
-  gen-brand-marks.mjs     Regenerates the placeholder brand logos
+  gen-brand-marks.mjs     Regenerates the placeholder tyre-brand wordmarks
+  check-logos.mjs         Fails if a referenced logo file is missing
 ```
 
 ### Brand logos
 
-`public/images/car-brands/` and `public/images/tyre-brands/` currently hold
-generated placeholder wordmarks, not official trademarked artwork. To use the
-real logos, drop them in using the same filenames (e.g. `michelin.svg`) and they
-are picked up automatically — the brand lists live in `src/lib/brands.ts`.
+`public/images/car-brands/` holds the real car marque artwork as **PNG**
+(`audi.png`, `mercedes-benz.png`, …). `public/images/tyre-brands/` still holds
+generated placeholder wordmarks as **SVG**.
+
+The brand lists — and the file extension used for each set — live in
+`src/lib/brands.ts`. Filenames are derived from the brand name by slugifying
+it: lowercased, accents stripped, non-alphanumerics collapsed to `-`
+(`Citroën` → `citroen.png`, `Land Rover` → `land-rover.png`).
+
+To add or replace a logo, drop the file in using that slug and add the brand to
+the relevant list. Then check nothing is dangling:
+
+```bash
+npm run check:logos
+```
+
+A missing file is otherwise invisible in development — Next serves a 404 and
+the card just renders empty — so this check also runs as part of `npm run
+build`.
 
 ---
 

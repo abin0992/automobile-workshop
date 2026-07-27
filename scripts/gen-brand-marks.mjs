@@ -1,4 +1,14 @@
+/**
+ * Regenerates the placeholder tyre-brand wordmarks.
+ *
+ * NOTE: the car-brands set is now real PNG artwork committed under
+ * `public/images/car-brands/`, so this script no longer writes it — doing so
+ * would drop stale `.svg` placeholders next to the real logos. Pass
+ * `--include-cars` if you deliberately want the old placeholder car SVGs back.
+ */
 import { mkdirSync, writeFileSync } from "node:fs";
+
+const includeCars = process.argv.includes("--include-cars");
 
 const car = [
   ["Audi", "#1a1a1a"], ["BMW", "#0166B1"], ["Mercedes-Benz", "#1a1a1a"],
@@ -37,7 +47,10 @@ function svg(name, colour, kind) {
 </svg>`;
 }
 
-for (const [dir, list, kind] of [["car-brands", car, "car"], ["tyre-brands", tyre, "tyre"]]) {
+const targets = [["tyre-brands", tyre, "tyre"]];
+if (includeCars) targets.unshift(["car-brands", car, "car"]);
+
+for (const [dir, list, kind] of targets) {
   const out = `public/images/${dir}`;
   mkdirSync(out, { recursive: true });
   for (const [name, colour] of list) writeFileSync(`${out}/${slug(name)}.svg`, svg(name, colour, kind));
