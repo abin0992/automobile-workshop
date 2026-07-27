@@ -78,18 +78,23 @@ export default function SiteHeader() {
             aria-label="Marton Road MOT Centre — home"
           >
             {/*
-              The full shield lockup. It already contains the "Marton Road MOT
-              Centre" strapline, so no wordmark is set beside it — repeating
-              the name would be redundant. It is given a generous height here
-              because the strapline inside the badge stops being readable much
-              below this size.
+              The full shield lockup, as vector artwork. It already contains
+              the "Marton Road MOT Centre" strapline, so no wordmark is set
+              beside it — repeating the name would be redundant. Being SVG it
+              stays sharp on high-density displays at any height.
+
+              `unoptimized` because Next's image optimiser rasterises SVGs,
+              which would throw away the resolution independence that is the
+              whole reason for using one. The file is ~6.6 KB gzipped, far
+              smaller than any raster it would produce.
             */}
             <Image
-              src="/images/brand/logo.png"
+              src="/images/brand/logo.svg"
               alt="Marton Road MOT Centre"
-              width={980}
-              height={760}
+              width={1536}
+              height={1024}
               priority
+              unoptimized
               className="h-14 w-auto sm:h-[4.5rem]"
             />
           </Link>

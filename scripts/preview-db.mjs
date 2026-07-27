@@ -19,36 +19,18 @@ const HOST = process.env.PREVIEW_DB_HOST ?? "127.0.0.1";
 
 const db = await PGlite.create({ dataDir: ".preview-db" });
 
-await db.exec(`
-  CREATE TABLE IF NOT EXISTS services (
-    id serial PRIMARY KEY,
-    slug varchar(80) NOT NULL UNIQUE,
-    name varchar(160) NOT NULL,
-    category varchar(80) NOT NULL,
-    description text NOT NULL,
-    price_gbp integer NOT NULL,
-    duration_minutes integer NOT NULL,
-    bookable boolean NOT NULL DEFAULT false,
-    created_at timestamp NOT NULL DEFAULT now()
-  );
-
-  CREATE TABLE IF NOT EXISTS bookings (
-    id serial PRIMARY KEY,
-    reference varchar(24) NOT NULL UNIQUE,
-    service_slug varchar(80) NOT NULL,
-    addon_slug varchar(80),
-    customer_name varchar(160) NOT NULL,
-    email varchar(200) NOT NULL,
-    phone varchar(40) NOT NULL,
-    vehicle_reg varchar(20) NOT NULL,
-    vehicle_details varchar(200) NOT NULL,
-    booking_date date NOT NULL,
-    time_slot time NOT NULL,
-    notes text,
-    status varchar(24) NOT NULL DEFAULT 'confirmed',
-    created_at timestamp NOT NULL DEFAULT now()
-  );
-`);
+/*
+ * The schema is NOT created here.
+ *
+ * This script used to carry its own copy of the CREATE TABLE statements,
+ * which had two problems: that copy could silently drift from
+ * src/db/schema.ts, and pre-creating the tables made `drizzle-kit migrate`
+ * fail on "relation already exists" — the migration journal was empty, so it
+ * replayed 0000_init against tables that were already there.
+ *
+ * `npm run build` now applies migrations, so the preview database is left
+ * empty and drizzle owns the schema in every environment.
+ */
 
 // pg's Pool opens several sockets; the server defaults to a single connection.
 const server = new PGLiteSocketServer({

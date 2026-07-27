@@ -26,6 +26,12 @@ for _ in $(seq 1 40); do
   sleep 0.5
 done
 
+# The preview database starts empty — drizzle owns the schema everywhere, so
+# apply migrations before serving. `npm run build` does this itself, but
+# `next dev` does not, so run it here for both modes.
+echo "[preview] applying migrations ..."
+npm run db:migrate
+
 if [ "$MODE" = "dev" ]; then
   npx next dev -p "$PORT"
 else
