@@ -6,11 +6,13 @@
     "preview": "./scripts/preview.sh",
     "preview:dev": "./scripts/preview.sh dev",
     "preview:db": "node scripts/preview-db.mjs",
-    "build": "npm run check:logos && next build",
+    "build": "npm run check:logos && npm run db:migrate && next build",
     "start": "next start",
     "check:logos": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-logos.mjs",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/migrate.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",

@@ -4,27 +4,44 @@ import { asc } from "drizzle-orm";
 import { getNext60Days } from "@/lib/availability";
 import { ensureSeeded } from "@/lib/seed";
 import BookingForm from "./BookingForm";
+import DatabaseNotice from "@/components/DatabaseNotice";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = { title: "Book online — Marton Road MOT Centre" };
+
+type ServiceRow = typeof services.$inferSelect;
+
+/**
+ * Mirrors the handling on /services: a database problem degrades this page
+ * instead of returning an opaque 500. Losing the booking form is bad enough
+ * without also hiding the phone number from someone trying to reach us.
+ */
+async function loadServices(): Promise<ServiceRow[] | null> {
+  try {
+    await ensureSeeded();
+    return await db
+      .select()
+      .from(services)
+      .orderBy(asc(services.category), asc(services.name));
+  } catch (error) {
+    console.error("[book] could not load services:", error);
+    return null;
+  }
+}
 
 export default async function BookPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await ensureSeeded();
   const sp = await searchParams;
   const preSelectRaw = sp.service;
   const preSelect = Array.isArray(preSelectRaw) ? preSelectRaw[0] : preSelectRaw;
 
-  const rows = await db
-    .select()
-    .from(services)
-    .orderBy(asc(services.category), asc(services.name));
+  const rows = await loadServices();
 
-  const bookable = rows.map((s) => ({
+  const bookable = (rows ?? []).map((s) => ({
     slug: s.slug,
     name: s.name,
     category: s.category,
@@ -54,12 +71,22 @@ export default async function BookPage({
         deposit required.
       </p>
 
-      <BookingForm
-        services={bookable}
-        days={days}
-        initialServiceSlug={initialService}
-        hasPreSelection={isPreSelected}
-      />
+      {rows === null ? (
+        <div className="mt-8">
+          <DatabaseNotice
+            title="Online booking is temporarily unavailable"
+            body="We can't load the booking calendar at the moment."
+            action="and we'll book you in over the phone"
+          />
+        </div>
+      ) : (
+        <BookingForm
+          services={bookable}
+          days={days}
+          initialServiceSlug={initialService}
+          hasPreSelection={isPreSelected}
+        />
+      )}
     </main>
   );
 }

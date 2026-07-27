@@ -271,8 +271,23 @@ branch redeploys automatically.
 Optional: `GOOGLE_PLACES_API_KEY` for live reviews, and `SITE_PASSWORD` /
 `SITE_USERNAME` for the password gate below.
 
-Run `npx drizzle-kit push` once from your machine (with the same
-`DATABASE_URL` in `.env.local`) so the tables exist before the first visit.
+Tables are created automatically. `npm run build` runs `npm run db:migrate`
+before `next build`, so every deploy applies any pending migrations to
+whatever `DATABASE_URL` points at. Migrations are idempotent — deploying an
+unchanged schema is a no-op.
+
+Two deliberate behaviours worth knowing:
+
+- If `DATABASE_URL` is unset the step is skipped and the build still succeeds,
+  so preview builds and CI do not need a database.
+- If migrations fail the build **stops**, rather than deploying code against a
+  database it cannot use.
+
+When you change `src/db/schema.ts`, generate the migration and commit it:
+
+```bash
+npm run db:generate      # writes drizzle/NNNN_*.sql
+```
 
 ### 4. Deploy
 
@@ -316,11 +331,16 @@ diagnosis rather than an opaque error code, for example:
 
 The two most common causes:
 
-1. **Tables were never created.** Put your Supabase `DATABASE_URL` in
-   `.env.local` locally and run `npx drizzle-kit push`, then reload the site.
-2. **Wrong connection string.** Netlify runs serverless, so use the Supabase
-   **transaction pooler** host on port `6543` with `?sslmode=require`, and
-   remember the username is `postgres.<project-ref>`.
+1. **Tables were never created.** Since migrations now run as part of
+   `npm run build`, the usual cause is that the deployment has not been
+   rebuilt since the migration step was added, or `DATABASE_URL` was missing
+   when it last built. **Trigger a redeploy** and check the build log for the
+   `[migrate]` lines. To fix it by hand instead, put the same `DATABASE_URL`
+   in `.env.local` and run `npm run db:migrate`.
+2. **Wrong connection string.** Netlify runs serverless, so use the
+   **transaction pooler** host (Supabase port `6543`, or the Neon `-pooler`
+   host) with `?sslmode=require`. On Supabase the username is
+   `postgres.<project-ref>`.
 
 After changing an environment variable in Netlify you must **redeploy** —
 variables are baked in at build time, so saving alone does not apply them.
@@ -334,7 +354,8 @@ never takes the whole site offline.
 | Symptom | Fix |
 | ------- | --- |
 | Build fails on `DATABASE_URL is required` | The variable is missing in Netlify's environment settings. |
-| Site loads but pages 500 | Tables not created — run `npx drizzle-kit push` against Supabase. |
+| Build fails on `[migrate] migrations failed` | The build could not reach the database, or the role cannot create tables. The build stops deliberately rather than deploying code against a database it cannot use. |
+| `/services` shows "price list temporarily unavailable" | The `services` table is missing. Redeploy so the build's migration step runs, then check `/api/health`. |
 | `too many clients already` | Use the pooler URI on port `6543`, not the direct connection. |
 | Colleague sees a login box unexpectedly | `SITE_PASSWORD` is set. Share the credentials, or remove the variable to make it open. |
 | Pushes do not redeploy | The production branch in Netlify does not match the branch you are pushing to. |
