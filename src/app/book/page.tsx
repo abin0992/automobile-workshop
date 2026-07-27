@@ -41,12 +41,15 @@ export default async function BookPage({
   const initialService = isPreSelected ? (preSelect as string) : "mot-test";
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <p className="text-sm font-medium uppercase tracking-wider text-amber-600">
+    <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <p className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-600">
+        <span aria-hidden className="h-px w-7 bg-brand-500" />
         Online booking
       </p>
-      <h1 className="mt-2 text-4xl font-bold text-slate-950">Book your visit</h1>
-      <p className="mt-3 max-w-2xl text-slate-700">
+      <h1 className="mt-3 font-display text-4xl font-extrabold uppercase tracking-tight text-carbon-950 sm:text-5xl">
+        Book your visit
+      </h1>
+      <p className="mt-3 max-w-2xl text-carbon-600">
         Pick a service and a time that suits you. Confirmation is instant — no
         deposit required.
       </p>

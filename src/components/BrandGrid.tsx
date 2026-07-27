@@ -12,7 +12,7 @@ export default function BrandGrid({ brands }: { brands: Brand[] }) {
       {brands.map((brand) => (
         <li
           key={brand.name}
-          className="flex h-20 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md"
+          className="flex h-20 items-center justify-center rounded-xl border border-carbon-200 bg-white px-4 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-400 hover:shadow-md"
         >
           <Image
             src={brand.logo}

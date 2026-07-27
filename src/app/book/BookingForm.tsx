@@ -192,8 +192,8 @@ export default function BookingForm({
             <span
               className={
                 (i <= step
-                  ? "bg-slate-900 text-white"
-                  : "bg-slate-200 text-slate-600") +
+                  ? "bg-carbon-900 text-white"
+                  : "bg-carbon-200 text-carbon-600") +
                 " grid h-7 w-7 place-items-center rounded-full text-xs font-semibold"
               }
             >
@@ -202,14 +202,14 @@ export default function BookingForm({
             <span
               className={
                 i === step
-                  ? "font-semibold text-slate-900"
-                  : "text-slate-500"
+                  ? "font-semibold text-carbon-900"
+                  : "text-carbon-500"
               }
             >
               {label}
             </span>
             {i < STEPS.length - 1 && (
-              <span className="mx-1 h-px w-6 bg-slate-300" aria-hidden />
+              <span className="mx-1 h-px w-6 bg-carbon-300" aria-hidden />
             )}
           </li>
         ))}
@@ -217,45 +217,45 @@ export default function BookingForm({
 
       {/* Step 0 — service */}
       {step === 0 && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="text-lg font-semibold text-slate-950">
+        <div className="rounded-2xl border border-carbon-200 bg-white p-6">
+          <h2 className="text-lg font-semibold text-carbon-950">
             Choose a service
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-carbon-600">
             Pick any item from our catalog — we&apos;ll fit you in at the next
             available slot.
           </p>
 
           {/* Top of list: Selected Service pinned prominently */}
           {selectedService && (
-            <div className="mt-5 rounded-xl border-2 border-amber-400 bg-amber-50/80 p-4 shadow-sm">
+            <div className="mt-5 rounded-xl border-2 border-brand-500 bg-brand-50/80 p-4 shadow-sm">
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-slate-950">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-500 px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-carbon-950">
                   ★ Selected Service
                 </span>
-                <span className="text-xs font-semibold text-amber-900">
+                <span className="text-xs font-semibold text-brand-800">
                   Top of your selection
                 </span>
               </div>
 
-              <div className="mt-3 flex flex-col gap-3 rounded-lg border border-amber-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-3 flex flex-col gap-3 rounded-lg border border-brand-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex-1">
-                  <p className="text-xs font-bold uppercase tracking-wider text-amber-700">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-700">
                     {selectedService.category}
                   </p>
-                  <h3 className="mt-0.5 text-lg font-bold text-slate-950">
+                  <h3 className="mt-0.5 text-lg font-bold text-carbon-950">
                     {selectedService.name}
                   </h3>
-                  <p className="mt-1 text-xs text-slate-600">
+                  <p className="mt-1 text-xs text-carbon-600">
                     {selectedService.description}
                   </p>
-                  <p className="mt-2 text-xs font-medium text-slate-500">
+                  <p className="mt-2 text-xs font-medium text-carbon-500">
                     Duration ~ {formatDuration(selectedService.durationMinutes)}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
-                  <p className="text-2xl font-bold text-slate-950">
+                <div className="flex items-center justify-between gap-4 border-t border-carbon-100 pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
+                  <p className="text-2xl font-bold text-carbon-950">
                     {selectedService.priceGbp === 0
                       ? "FREE"
                       : formatPricePence(selectedService.priceGbp)}
@@ -263,7 +263,7 @@ export default function BookingForm({
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-1 rounded-md bg-amber-400 px-4 py-2 text-xs font-bold text-slate-950 shadow transition hover:bg-amber-300"
+                    className="inline-flex items-center gap-1 rounded-md bg-brand-500 px-4 py-2 text-xs font-bold text-carbon-950 shadow transition hover:bg-brand-400"
                   >
                     Select Date &amp; Time →
                   </button>
@@ -277,7 +277,7 @@ export default function BookingForm({
               <span className="sr-only">Search services</span>
               <span
                 aria-hidden
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-carbon-400"
               >
                 🔍
               </span>
@@ -286,7 +286,7 @@ export default function BookingForm({
                 value={serviceQuery}
                 onChange={(e) => setServiceQuery(e.target.value)}
                 placeholder="Search services…"
-                className="w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                className="w-full rounded-md border border-carbon-300 bg-white py-2 pl-10 pr-3 text-sm text-carbon-900 placeholder-carbon-400 focus:border-carbon-900 focus:outline-none focus:ring-2 focus:ring-carbon-900/20"
               />
             </label>
           </div>
@@ -294,7 +294,7 @@ export default function BookingForm({
           <div className="mt-5 space-y-6">
             {groupedServices.map(([cat, items]) => (
               <div key={cat}>
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
                   {cat}
                 </p>
                 <div className="mt-2 grid gap-3 sm:grid-cols-2">
@@ -307,32 +307,32 @@ export default function BookingForm({
                         onClick={() => setServiceSlug(s.slug)}
                         className={
                           (active
-                            ? "border-slate-900 ring-2 ring-slate-900/10 "
-                            : "border-slate-200 hover:border-slate-400 ") +
+                            ? "border-carbon-900 ring-2 ring-carbon-900/10 "
+                            : "border-carbon-200 hover:border-carbon-400 ") +
                           "flex flex-col rounded-xl border bg-white p-4 text-left transition"
                         }
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <p className="font-semibold text-slate-950">
+                            <p className="font-semibold text-carbon-950">
                               {s.name}
                             </p>
                             {active && (
-                              <span className="mt-1 inline-block rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-semibold text-white">
+                              <span className="mt-1 inline-block rounded-full bg-carbon-900 px-2 py-0.5 text-[10px] font-semibold text-white">
                                 ✓ Selected
                               </span>
                             )}
                           </div>
-                          <p className="text-base font-bold text-slate-950">
+                          <p className="text-base font-bold text-carbon-950">
                             {s.priceGbp === 0
                               ? "FREE"
                               : formatPricePence(s.priceGbp)}
                           </p>
                         </div>
-                        <p className="mt-1 text-xs text-slate-600">
+                        <p className="mt-1 text-xs text-carbon-600">
                           {s.description}
                         </p>
-                        <p className="mt-2 text-xs text-slate-500">
+                        <p className="mt-2 text-xs text-carbon-500">
                           Duration ~ {formatDuration(s.durationMinutes)}
                         </p>
                       </button>
@@ -342,7 +342,7 @@ export default function BookingForm({
               </div>
             ))}
             {groupedServices.length === 0 && (
-              <p className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-500">
+              <p className="rounded-md border border-dashed border-carbon-300 bg-carbon-50 p-6 text-center text-sm text-carbon-500">
                 No services match your search.
               </p>
             )}
@@ -353,7 +353,7 @@ export default function BookingForm({
               type="button"
               disabled={!canGoStep1}
               onClick={() => setStep(1)}
-              className="rounded-md bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
+              className="rounded-md bg-carbon-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-carbon-800 disabled:opacity-50"
             >
               Continue →
             </button>
@@ -363,43 +363,43 @@ export default function BookingForm({
 
       {/* Step 1 — date/time */}
       {step === 1 && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="rounded-2xl border border-carbon-200 bg-white p-6">
           {/* Selected Service Card */}
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50/80 p-4">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-400 bg-brand-50/80 p-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-amber-800">
+              <p className="text-xs font-semibold uppercase tracking-wider text-brand-700">
                 Selected service
               </p>
-              <h3 className="mt-0.5 text-base font-bold text-slate-950">
+              <h3 className="mt-0.5 text-base font-bold text-carbon-950">
                 {selectedService?.name}{" "}
-                <span className="text-sm font-semibold text-amber-900">
+                <span className="text-sm font-semibold text-brand-800">
                   ({selectedService?.priceGbp === 0
                     ? "FREE"
                     : formatPricePence(selectedService?.priceGbp ?? 0)})
                 </span>
               </h3>
-              <p className="mt-1 text-xs text-slate-600">
+              <p className="mt-1 text-xs text-carbon-600">
                 {selectedService?.description}
               </p>
             </div>
             <button
               type="button"
               onClick={() => setStep(0)}
-              className="rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-950 shadow-sm transition hover:bg-amber-100"
+              className="rounded-md border border-brand-400 bg-white px-3 py-1.5 text-xs font-semibold text-brand-950 shadow-sm transition hover:bg-brand-100"
             >
               Change service
             </button>
           </div>
 
-          <h2 className="text-lg font-semibold text-slate-950">
+          <h2 className="text-lg font-semibold text-carbon-950">
             Pick a date &amp; time
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-carbon-600">
             Live availability at our workshop. Sundays are closed.
           </p>
 
           <div className="mt-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
               Date
             </p>
             <div className="mt-2 -mx-2 flex gap-2 overflow-x-auto px-2 pb-2">
@@ -413,10 +413,10 @@ export default function BookingForm({
                     disabled={!d.open}
                     className={
                       (active
-                        ? "border-slate-900 bg-slate-900 text-white "
+                        ? "border-carbon-900 bg-carbon-900 text-white "
                         : d.open
-                        ? "border-slate-200 bg-white text-slate-800 hover:border-slate-400 "
-                        : "border-slate-100 bg-slate-50 text-slate-400 line-through ") +
+                        ? "border-carbon-200 bg-white text-carbon-800 hover:border-carbon-400 "
+                        : "border-carbon-100 bg-carbon-50 text-carbon-400 line-through ") +
                       "flex-none rounded-lg border px-3 py-2 text-center text-xs font-medium transition"
                     }
                   >
@@ -428,13 +428,13 @@ export default function BookingForm({
           </div>
 
           <div className="mt-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
               Time
             </p>
             {loadingSlots ? (
-              <p className="mt-3 text-sm text-slate-500">Loading availability…</p>
+              <p className="mt-3 text-sm text-carbon-500">Loading availability…</p>
             ) : slots.length === 0 ? (
-              <p className="mt-3 text-sm text-slate-500">
+              <p className="mt-3 text-sm text-carbon-500">
                 No slots on this day. Pick another date.
               </p>
             ) : (
@@ -449,10 +449,10 @@ export default function BookingForm({
                       onClick={() => setTimeSlot(s.time)}
                       className={
                         (active
-                          ? "border-slate-900 bg-slate-900 text-white "
+                          ? "border-carbon-900 bg-carbon-900 text-white "
                           : s.available
-                          ? "border-slate-200 bg-white text-slate-800 hover:border-slate-400 "
-                          : "border-slate-100 bg-slate-50 text-slate-400 line-through ") +
+                          ? "border-carbon-200 bg-white text-carbon-800 hover:border-carbon-400 "
+                          : "border-carbon-100 bg-carbon-50 text-carbon-400 line-through ") +
                         "rounded-md border py-2 text-sm font-medium transition"
                       }
                       title={
@@ -473,7 +473,7 @@ export default function BookingForm({
             <button
               type="button"
               onClick={() => setStep(0)}
-              className="rounded-md border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              className="rounded-md border border-carbon-300 px-4 py-2.5 text-sm font-semibold text-carbon-700 transition hover:bg-carbon-100"
             >
               ← Back
             </button>
@@ -481,7 +481,7 @@ export default function BookingForm({
               type="button"
               disabled={!canGoStep2}
               onClick={() => setStep(2)}
-              className="rounded-md bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
+              className="rounded-md bg-carbon-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-carbon-800 disabled:opacity-50"
             >
               Continue →
             </button>
@@ -492,8 +492,8 @@ export default function BookingForm({
       {/* Step 2 — details */}
       {step === 2 && (
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
-            <h2 className="text-lg font-semibold text-slate-950">Your details</h2>
+          <div className="rounded-2xl border border-carbon-200 bg-white p-6">
+            <h2 className="text-lg font-semibold text-carbon-950">Your details</h2>
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <Field label="Full name" required>
@@ -555,11 +555,11 @@ export default function BookingForm({
 
             {/* MOT upsell */}
             {serviceSlug === "mot-test" && (interimSvc || fullSvc) && (
-              <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
-                <p className="text-sm font-semibold text-amber-900">
+              <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50 p-4">
+                <p className="text-sm font-semibold text-brand-800">
                   💡 Add a service and save a visit
                 </p>
-                <p className="mt-1 text-xs text-amber-900/80">
+                <p className="mt-1 text-xs text-brand-800/80">
                   Your car is already with us — get an Interim or Full Service
                   done at the same time.
                 </p>
@@ -602,7 +602,7 @@ export default function BookingForm({
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="rounded-md border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+                className="rounded-md border border-carbon-300 px-4 py-2.5 text-sm font-semibold text-carbon-700 transition hover:bg-carbon-100"
               >
                 ← Back
               </button>
@@ -610,7 +610,7 @@ export default function BookingForm({
                 type="button"
                 onClick={handleSubmit}
                 disabled={!canSubmit || submitting}
-                className="rounded-md bg-amber-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-amber-300 disabled:opacity-50"
+                className="rounded-md bg-brand-500 px-5 py-2.5 text-sm font-semibold text-carbon-950 transition hover:bg-brand-400 disabled:opacity-50"
               >
                 {submitting ? "Confirming…" : "Confirm booking"}
               </button>
@@ -618,21 +618,21 @@ export default function BookingForm({
           </div>
 
           {/* Summary sidebar */}
-          <aside className="rounded-2xl border border-slate-200 bg-white p-6 lg:sticky lg:top-24 lg:h-fit">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">
+          <aside className="rounded-2xl border border-carbon-200 bg-white p-6 lg:sticky lg:top-24 lg:h-fit">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-carbon-500">
               Booking summary
             </h3>
             <dl className="mt-4 space-y-3 text-sm">
               <div>
-                <dt className="text-slate-500">Service</dt>
-                <dd className="font-medium text-slate-900">
+                <dt className="text-carbon-500">Service</dt>
+                <dd className="font-medium text-carbon-900">
                   {selectedService?.name ?? "—"}
                 </dd>
               </div>
               {addonSlug && (
                 <div>
-                  <dt className="text-slate-500">Add-on</dt>
-                  <dd className="font-medium text-slate-900">
+                  <dt className="text-carbon-500">Add-on</dt>
+                  <dd className="font-medium text-carbon-900">
                     {addonSlug === "interim-service"
                       ? interimSvc?.name
                       : fullSvc?.name}
@@ -640,20 +640,20 @@ export default function BookingForm({
                 </div>
               )}
               <div>
-                <dt className="text-slate-500">When</dt>
-                <dd className="font-medium text-slate-900">
+                <dt className="text-carbon-500">When</dt>
+                <dd className="font-medium text-carbon-900">
                   {date || "—"} at {timeSlot || "—"}
                 </dd>
               </div>
             </dl>
-            <div className="mt-5 border-t border-slate-100 pt-4">
+            <div className="mt-5 border-t border-carbon-100 pt-4">
               <div className="flex items-baseline justify-between">
-                <span className="text-sm text-slate-500">Total</span>
-                <span className="text-2xl font-bold text-slate-950">
+                <span className="text-sm text-carbon-500">Total</span>
+                <span className="text-2xl font-bold text-carbon-950">
                   {formatPricePence(totalPricePence)}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-carbon-500">
                 No deposit — pay at the workshop.
               </p>
             </div>
@@ -662,20 +662,22 @@ export default function BookingForm({
       )}
 
       <style jsx>{`
+        /* Themed via the brand tokens in globals.css, so the form inputs
+           pick up the same lime focus ring as the rest of the site. */
         :global(.input) {
           width: 100%;
           border-radius: 0.375rem;
-          border: 1px solid rgb(203 213 225);
+          border: 1px solid var(--color-carbon-300);
           background: white;
-          padding: 0.5rem 0.75rem;
+          padding: 0.625rem 0.75rem;
           font-size: 0.875rem;
-          color: rgb(15 23 42);
+          color: var(--color-carbon-900);
           outline: none;
           transition: border-color 0.15s, box-shadow 0.15s;
         }
         :global(.input:focus) {
-          border-color: rgb(15 23 42);
-          box-shadow: 0 0 0 3px rgb(15 23 42 / 0.1);
+          border-color: var(--color-brand-500);
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 25%, transparent);
         }
       `}</style>
     </div>
@@ -693,7 +695,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
+      <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-carbon-600">
         {label}
         {required && <span className="ml-0.5 text-rose-500">*</span>}
       </span>
@@ -719,8 +721,8 @@ function UpsellOption({
     <label
       className={
         (checked
-          ? "border-amber-500 bg-white ring-2 ring-amber-500/20 "
-          : "border-transparent bg-white/60 hover:border-amber-400 ") +
+          ? "border-brand-500 bg-white ring-2 ring-brand-500/20 "
+          : "border-transparent bg-white/60 hover:border-brand-500 ") +
         "flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition"
       }
     >
@@ -729,15 +731,15 @@ function UpsellOption({
         name="addon"
         checked={checked}
         onChange={onSelect}
-        className="h-4 w-4 accent-amber-600"
+        className="h-4 w-4 accent-brand-600"
       />
       <span className="flex-1">
-        <span className="block text-sm font-semibold text-slate-900">{title}</span>
+        <span className="block text-sm font-semibold text-carbon-900">{title}</span>
         {subtitle && (
-          <span className="block text-xs text-slate-500">{subtitle}</span>
+          <span className="block text-xs text-carbon-500">{subtitle}</span>
         )}
       </span>
-      <span className="text-sm font-semibold text-slate-900">
+      <span className="text-sm font-semibold text-carbon-900">
         {price === 0 ? "—" : `+${formatPricePence(price)}`}
       </span>
     </label>

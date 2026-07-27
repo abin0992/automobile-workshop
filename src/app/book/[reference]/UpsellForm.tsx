@@ -61,8 +61,8 @@ export default function UpsellForm({
       <label
         className={
           (selected === ""
-            ? "border-amber-500 ring-2 ring-amber-500/20 "
-            : "border-transparent hover:border-amber-400 ") +
+            ? "border-brand-500 ring-2 ring-brand-500/20 "
+            : "border-transparent hover:border-brand-500 ") +
           "flex cursor-pointer items-center gap-3 rounded-lg border bg-white p-3 transition"
         }
       >
@@ -71,17 +71,17 @@ export default function UpsellForm({
           name={`upsell-${reference}`}
           checked={selected === ""}
           onChange={() => setSelected("")}
-          className="h-4 w-4 accent-amber-600"
+          className="h-4 w-4 accent-brand-600"
         />
         <span className="flex-1">
-          <span className="block text-sm font-semibold text-slate-900">
+          <span className="block text-sm font-semibold text-carbon-900">
             Just the MOT
           </span>
-          <span className="block text-xs text-slate-500">
+          <span className="block text-xs text-carbon-500">
             No add-on service.
           </span>
         </span>
-        <span className="text-sm font-semibold text-slate-900">—</span>
+        <span className="text-sm font-semibold text-carbon-900">—</span>
       </label>
 
       {options.map((opt) => (
@@ -89,8 +89,8 @@ export default function UpsellForm({
           key={opt.slug}
           className={
             (selected === opt.slug
-              ? "border-amber-500 ring-2 ring-amber-500/20 "
-              : "border-transparent hover:border-amber-400 ") +
+              ? "border-brand-500 ring-2 ring-brand-500/20 "
+              : "border-transparent hover:border-brand-500 ") +
             "flex cursor-pointer items-center gap-3 rounded-lg border bg-white p-3 transition"
           }
         >
@@ -99,17 +99,17 @@ export default function UpsellForm({
             name={`upsell-${reference}`}
             checked={selected === opt.slug}
             onChange={() => setSelected(opt.slug)}
-            className="h-4 w-4 accent-amber-600"
+            className="h-4 w-4 accent-brand-600"
           />
           <span className="flex-1">
-            <span className="block text-sm font-semibold text-slate-900">
+            <span className="block text-sm font-semibold text-carbon-900">
               {opt.name}
             </span>
-            <span className="block text-xs text-slate-500">
+            <span className="block text-xs text-carbon-500">
               {opt.description}
             </span>
           </span>
-          <span className="text-sm font-semibold text-slate-900">
+          <span className="text-sm font-semibold text-carbon-900">
             +{formatPricePence(opt.priceGbp)}
           </span>
         </label>
@@ -131,7 +131,7 @@ export default function UpsellForm({
           type="button"
           onClick={save}
           disabled={!dirty || saving}
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
+          className="rounded-md bg-carbon-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-carbon-800 disabled:opacity-50"
         >
           {saving ? "Saving…" : dirty ? "Save changes" : "No changes"}
         </button>

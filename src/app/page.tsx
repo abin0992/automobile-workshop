@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { db } from "@/db";
 import { services } from "@/db/schema";
@@ -7,19 +8,65 @@ import { ensureSeeded } from "@/lib/seed";
 import HeroSlider from "@/components/HeroSlider";
 import BrandMarquee from "@/components/BrandMarquee";
 import GoogleReviews from "@/components/GoogleReviews";
+import SectionHeading from "@/components/SectionHeading";
+import DatabaseNotice from "@/components/DatabaseNotice";
 import { CAR_BRANDS, splitIntoRows } from "@/lib/brands";
 import { getGoogleReviews } from "@/lib/reviews";
-import DatabaseNotice from "@/components/DatabaseNotice";
+import { CONTACT } from "@/lib/site";
+import {
+  AirConIcon,
+  BatteryIcon,
+  BrakeIcon,
+  ClockIcon,
+  DiagnosticsIcon,
+  MotIcon,
+  ShieldPoundIcon,
+  SpannerIcon,
+  TyreIcon,
+} from "@/components/ServiceIcons";
 
+/**
+ * The workshop's own premises lead the slider — the black cladding and lime
+ * fascia are the brand, so showing the real unit is stronger than stock
+ * imagery and tells customers exactly what to look for on Marton Road.
+ */
 const SLIDES = [
-  { src: "/images/slider/slider-1.jpg", alt: "Car raised on a two-post lift in our Middlesbrough workshop" },
-  { src: "/images/slider/slider-2.jpg", alt: "Technician carrying out a DVSA MOT test" },
-  { src: "/images/slider/slider-3.jpg", alt: "New tyres being fitted and balanced in our tyre bay" },
-  { src: "/images/slider/slider-4.jpg", alt: "Engine bay servicing and oil check" },
+  {
+    src: "/images/workshop/shopfront-wide.jpg",
+    alt: "Marton Road MOT Centre — the black-clad unit and lime signage at 416 Marton Road",
+    position: "center 42%",
+  },
+  {
+    src: "/images/workshop/reception-logo-wall.jpg",
+    alt: "Our reception and customer waiting area with the M.R MOT shield on the wall",
+    position: "center 40%",
+  },
+  { src: "/images/slider/slider-1.jpg", alt: "A car raised on the two-post lift in our workshop" },
+  { src: "/images/slider/slider-3.jpg", alt: "New tyres being fitted and balanced in the tyre bay" },
 ];
 
-/** Three scrolling rows, so every marque is shown without repeats. */
 const BRAND_ROWS = splitIntoRows(CAR_BRANDS, 3);
+
+/**
+ * The full range, including jobs that are quoted rather than booked online.
+ * Icons come from the shared set so the grid stays visually consistent.
+ */
+const CAPABILITIES = [
+  { icon: MotIcon, title: "MOT testing", body: "Class 4 tests on site, with a free re-test within 10 working days.", href: "/services" },
+  { icon: SpannerIcon, title: "Servicing", body: "Interim, full and major services to manufacturer schedules.", href: "/services" },
+  { icon: TyreIcon, title: "Tyres & balancing", body: "Premium, mid-range and budget tyres, fitted and balanced.", href: "/tyres" },
+  { icon: BrakeIcon, title: "Brakes & suspension", body: "Pads, discs, callipers, shocks and springs — inspected free.", href: "/services" },
+  { icon: DiagnosticsIcon, title: "Diagnostics", body: "Engine management and electrical faults traced properly.", href: "/services" },
+  { icon: AirConIcon, title: "Air-con recharge", body: "Re-gas and leak testing for R134a and R1234yf systems.", href: "/services" },
+  { icon: BatteryIcon, title: "Batteries & exhausts", body: "Tested, supplied and fitted, usually the same day.", href: "/services" },
+  { icon: ClockIcon, title: "While-you-wait", body: "Book the first slot of the day and be away within the hour.", href: "/book" },
+];
+
+const PROMISES = [
+  { icon: ShieldPoundIcon, title: "Fixed, upfront pricing", body: "You get a written estimate before a spanner is lifted. If the job changes, we call you first — always." },
+  { icon: MotIcon, title: "DVSA-approved station", body: `Vehicle testing station ${CONTACT.motSiteNumber}, with qualified testers and an MOT viewing area you're welcome to use.` },
+  { icon: SpannerIcon, title: "12-month warranty", body: "Every part we fit and every hour we work is covered for 12 months or 12,000 miles. No small print." },
+];
 
 export const dynamic = "force-dynamic";
 
@@ -48,104 +95,327 @@ export default async function HomePage() {
 
   return (
     <main>
-      {/* Hero with image slider background */}
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
       <HeroSlider slides={SLIDES}>
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-amber-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> DVSA Approved MOT Station
+            <p className="inline-flex items-center gap-2 rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-brand-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+              DVSA-approved · Station {CONTACT.motSiteNumber}
             </p>
-            <h1 className="mt-4 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-              Honest, expert car care in the heart of Middlesbrough.
+
+            <h1 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+              Straight-talking
+              <span className="block text-brand-500">car care</span>
+              in Middlesbrough.
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-slate-300">
-              Family-run since 2004. MOT tests, servicing, diagnostics and tyres —
-              all under one roof, with transparent fixed prices.
+
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-carbon-300">
+              MOTs, servicing, diagnostics and tyres — all under one roof on
+              Marton Road. Fixed prices, a written estimate before we start,
+              and a 12-month warranty on everything we fit.
             </p>
+
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/book"
-                className="rounded-md bg-amber-400 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/20 transition hover:bg-amber-300"
+                className="rounded-md bg-brand-500 px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-carbon-950 shadow-lg shadow-brand-500/25 transition hover:bg-brand-400"
               >
-                Book a service
+                Book your slot
               </Link>
-              <Link
-                href="/services"
-                className="rounded-md border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+              <a
+                href={CONTACT.phoneHref}
+                className="rounded-md border border-white/25 bg-white/5 px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:border-brand-500 hover:bg-white/10"
               >
-                View prices
-              </Link>
+                {CONTACT.phoneDisplay}
+              </a>
             </div>
-            <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6 text-sm">
+
+            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-white/10 pt-6">
               <div>
-                <dt className="text-slate-400">Reviews</dt>
-                <dd className="mt-1 text-xl font-semibold">{reviews.rating.toFixed(1)} ★</dd>
+                <dt className="text-xs uppercase tracking-wider text-carbon-400">Google rating</dt>
+                <dd className="mt-1 font-display text-3xl font-extrabold text-white">
+                  {reviews.rating.toFixed(1)}
+                  <span className="ml-1 text-lg text-brand-500">★</span>
+                </dd>
               </div>
               <div>
-                <dt className="text-slate-400">Since</dt>
-                <dd className="mt-1 text-xl font-semibold">2004</dd>
+                <dt className="text-xs uppercase tracking-wider text-carbon-400">Warranty</dt>
+                <dd className="mt-1 font-display text-3xl font-extrabold text-white">
+                  12<span className="text-lg text-carbon-400"> mo</span>
+                </dd>
               </div>
               <div>
-                <dt className="text-slate-400">Warranty</dt>
-                <dd className="mt-1 text-xl font-semibold">12 mo.</dd>
+                <dt className="text-xs uppercase tracking-wider text-carbon-400">All makes</dt>
+                <dd className="mt-1 font-display text-3xl font-extrabold text-white">
+                  {CAR_BRANDS.length}+
+                </dd>
               </div>
             </dl>
           </div>
 
-          {/* Quick booking teaser card */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur">
-            <p className="text-sm font-medium text-amber-300">Quick book</p>
-            <h2 className="mt-2 text-2xl font-semibold">MOT from £54.95</h2>
-            <p className="mt-2 text-sm text-slate-300">
-              While you&apos;re here, add an Interim or Full Service and save on
-              labour — we&apos;ll do it in one visit.
+          {/* Quick-book card */}
+          <div className="rounded-2xl border border-white/12 bg-carbon-950/70 p-6 shadow-2xl backdrop-blur-md lg:mt-2">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-400">
+                Quick book
+              </p>
+              <span className="rounded-full bg-brand-500/15 px-2.5 py-1 text-[11px] font-bold uppercase text-brand-400">
+                Free re-test
+              </span>
+            </div>
+
+            <h2 className="mt-3 font-display text-4xl font-extrabold uppercase text-white">
+              MOT from £54.95
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-carbon-300">
+              Already booking an MOT? Add an Interim or Full Service and
+              we&apos;ll do both in the one visit — saving you a second trip.
             </p>
+
             <ul className="mt-5 space-y-3 text-sm">
               {[
-                "Free re-test within 10 days",
-                "Courtesy waiting area with WiFi",
-                "SMS reminders — never miss another test",
+                "Free re-test within 10 working days",
+                "MOT viewing area — watch the test yourself",
+                "Waiting room with WiFi and free parking",
+                "No deposit, pay at the workshop",
               ].map((line) => (
-                <li key={line} className="flex items-start gap-2 text-slate-200">
-                  <span className="mt-0.5 text-amber-300">✓</span>
+                <li key={line} className="flex items-start gap-2.5 text-carbon-200">
+                  <svg viewBox="0 0 20 20" className="mt-0.5 h-4 w-4 flex-none text-brand-500" fill="currentColor" aria-hidden>
+                    <path d="M8.2 13.6 5 10.4l1.3-1.3 1.9 1.9 5.5-5.5L15 6.8l-6.8 6.8Z" />
+                  </svg>
                   {line}
                 </li>
               ))}
             </ul>
+
             <Link
               href="/book?service=mot-test"
-              className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-white px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
+              className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-white px-4 py-3.5 text-sm font-bold uppercase tracking-wide text-carbon-950 transition hover:bg-brand-500"
             >
               Book your MOT →
             </Link>
+            <p className="mt-3 text-center text-xs text-carbon-400">
+              Or call {CONTACT.phoneDisplay} — {CONTACT.hoursShort}
+            </p>
           </div>
         </div>
       </HeroSlider>
 
-      {/* We repair all car brands */}
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-wider text-amber-600">
-              All makes &amp; models
-            </p>
-            <h2 className="mt-2 text-3xl font-bold text-slate-950 sm:text-4xl">
-              We repair <span className="text-amber-500">all car brands</span>
-            </h2>
-            <p className="mt-4 text-slate-600">
-              From everyday hatchbacks to prestige German saloons, our
-              dealer-trained technicians service, MOT and repair every marque on
-              UK roads — using genuine or OE-matching parts, with your
-              manufacturer warranty protected.
-            </p>
+      {/* ── Promise strip ────────────────────────────────────────────── */}
+      <section className="border-b border-carbon-200 bg-white">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
+          {PROMISES.map(({ icon: Icon, title, body }) => (
+            <div key={title} className="flex items-start gap-4">
+              <span className="grid h-12 w-12 flex-none place-items-center rounded-xl bg-brand-50 text-brand-600 ring-1 ring-brand-200">
+                <Icon className="h-6 w-6" />
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-bold uppercase tracking-wide text-carbon-950">
+                  {title}
+                </h2>
+                <p className="mt-1 text-sm leading-relaxed text-carbon-600">{body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Headline pricing ─────────────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionHeading
+            eyebrow="Bookable online"
+            title={
+              <>
+                Fixed prices.
+                <span className="text-brand-500"> No surprises.</span>
+              </>
+            }
+            intro="The four jobs we're asked for most. Every price includes parts, labour and VAT."
+          />
+          <Link
+            href="/services"
+            className="hidden shrink-0 text-sm font-bold uppercase tracking-wide text-carbon-700 underline-offset-4 hover:text-brand-600 hover:underline sm:inline"
+          >
+            Full price list →
+          </Link>
+        </div>
+
+        {cards === null ? (
+          <div className="mt-10">
+            <DatabaseNotice />
+          </div>
+        ) : (
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {cards.map((s, i) => (
+              <div
+                key={s.slug}
+                className={`group relative flex flex-col overflow-hidden rounded-2xl border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
+                  i === 0
+                    ? "border-brand-400 ring-1 ring-brand-300"
+                    : "border-carbon-200 hover:border-brand-300"
+                }`}
+              >
+                {i === 0 && (
+                  <span className="absolute right-4 top-4 rounded-full bg-brand-500 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-carbon-950">
+                    Most booked
+                  </span>
+                )}
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-600">
+                  {s.category}
+                </p>
+                <h3 className="mt-2 font-display text-2xl font-bold uppercase leading-tight text-carbon-950">
+                  {s.name}
+                </h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-carbon-600">
+                  {s.description}
+                </p>
+                <p className="mt-5 font-display text-4xl font-extrabold text-carbon-950">
+                  {formatPricePence(s.priceGbp)}
+                </p>
+                <Link
+                  href={`/book?service=${s.slug}`}
+                  className="mt-4 inline-flex items-center justify-center rounded-md bg-carbon-950 px-4 py-3 text-sm font-bold uppercase tracking-wide text-white transition group-hover:bg-brand-500 group-hover:text-carbon-950"
+                >
+                  Book now
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <Link
+          href="/services"
+          className="mt-6 inline-flex text-sm font-bold uppercase tracking-wide text-carbon-700 underline-offset-4 hover:text-brand-600 hover:underline sm:hidden"
+        >
+          Full price list →
+        </Link>
+      </section>
+
+      {/* ── Everything we do ─────────────────────────────────────────── */}
+      <section className="border-y border-carbon-200 bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+          <SectionHeading
+            eyebrow="Under one roof"
+            title="Everything your car needs"
+            intro="One garage, one team, one place to bring it — from the annual test to the jobs that crop up in between."
+            align="center"
+          />
+
+          <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {CAPABILITIES.map(({ icon: Icon, title, body, href }) => (
+              <li key={title}>
+                <Link
+                  href={href}
+                  className="group flex h-full flex-col rounded-2xl border border-carbon-200 bg-carbon-50/60 p-6 transition hover:-translate-y-1 hover:border-brand-400 hover:bg-white hover:shadow-lg"
+                >
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-carbon-950 text-brand-500 transition group-hover:bg-brand-500 group-hover:text-carbon-950">
+                    <Icon className="h-6 w-6" />
+                  </span>
+                  <h3 className="mt-4 font-display text-lg font-bold uppercase tracking-wide text-carbon-950">
+                    {title}
+                  </h3>
+                  <p className="mt-1.5 flex-1 text-sm leading-relaxed text-carbon-600">
+                    {body}
+                  </p>
+                  <span className="mt-3 text-sm font-bold text-brand-600 opacity-0 transition group-hover:opacity-100">
+                    Learn more →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── Find us / the actual shop ────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div className="relative overflow-hidden rounded-2xl border border-carbon-200 shadow-xl">
+            <Image
+              src="/images/brand/actual-shop.jpeg"
+              alt="The Marton Road MOT Centre unit — black cladding with lime green signage, customer parking out front"
+              width={1024}
+              height={768}
+              sizes="(min-width: 1024px) 560px, 100vw"
+              className="h-full w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-carbon-950/85 to-transparent p-5 pt-16">
+              <p className="font-display text-lg font-bold uppercase tracking-wide text-white">
+                416 Marton Road
+              </p>
+              <p className="text-sm text-carbon-300">
+                Free customer parking directly outside
+              </p>
+            </div>
           </div>
 
-          {/*
-            Every badge we hold artwork for is dealt across the rows, so each
-            one appears exactly once and each row scrolls. Alternating the
-            direction keeps the wall lively without duplicating any marque.
-          */}
-          <div className="mt-10 space-y-4">
+          <div>
+            <SectionHeading
+              eyebrow="Find us"
+              title={
+                <>
+                  Look for the
+                  <span className="text-brand-500"> green sign</span>
+                </>
+              }
+              intro="We're the black unit on Marton Road, a few minutes from James Cook University Hospital. Pull straight onto the forecourt — reception is the door in the middle."
+            />
+
+            <ul className="mt-8 space-y-4">
+              {[
+                ["Address", `${CONTACT.addressLine1}, ${CONTACT.town} ${CONTACT.postcode}`],
+                ["Opening hours", CONTACT.hoursShort],
+                ["Phone", CONTACT.phoneDisplay],
+              ].map(([label, value]) => (
+                <li
+                  key={label}
+                  className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-carbon-200 pb-3"
+                >
+                  <span className="w-32 shrink-0 text-xs font-bold uppercase tracking-[0.16em] text-carbon-500">
+                    {label}
+                  </span>
+                  <span className="font-medium text-carbon-900">{value}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={CONTACT.mapsUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="rounded-md bg-carbon-950 px-5 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-carbon-800"
+              >
+                Get directions
+              </a>
+              <Link
+                href="/contact"
+                className="rounded-md border border-carbon-300 bg-white px-5 py-3 text-sm font-bold uppercase tracking-wide text-carbon-800 transition hover:border-brand-500 hover:text-brand-700"
+              >
+                Contact us
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── All makes and models ─────────────────────────────────────── */}
+      <section className="border-y border-carbon-200 bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+          <SectionHeading
+            eyebrow="All makes & models"
+            title={
+              <>
+                We repair <span className="text-brand-500">every badge</span>
+              </>
+            }
+            intro="From everyday hatchbacks to prestige German saloons — serviced with genuine or OE-matching parts, so your manufacturer warranty stays intact."
+            align="center"
+          />
+
+          <div className="mt-12 space-y-4">
             {BRAND_ROWS.map((row, i) => (
               <BrandMarquee
                 key={i}
@@ -156,9 +426,12 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <p className="mt-8 text-center text-sm text-slate-500">
+          <p className="mt-8 text-center text-sm text-carbon-500">
             Don&apos;t see your badge? We work on it too —{" "}
-            <Link href="/contact" className="font-semibold text-slate-800 underline underline-offset-4">
+            <Link
+              href="/contact"
+              className="font-bold text-carbon-800 underline underline-offset-4 hover:text-brand-600"
+            >
               ask us about your vehicle
             </Link>
             .
@@ -166,91 +439,46 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Services grid */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-wider text-amber-600">
-              Bookable services
-            </p>
-            <h2 className="mt-1 text-3xl font-bold text-slate-950">
-              Fixed prices. No surprises.
-            </h2>
-          </div>
-          <Link
-            href="/services"
-            className="hidden text-sm font-semibold text-slate-700 underline-offset-4 hover:underline sm:inline"
-          >
-            View full price list →
-          </Link>
-        </div>
-
-        {cards === null ? (
-          <div className="mt-8">
-            <DatabaseNotice />
-          </div>
-        ) : (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {cards.map((s) => (
-            <div
-              key={s.slug}
-              className="flex flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                {s.category}
-              </p>
-              <h3 className="mt-2 text-lg font-semibold text-slate-950">{s.name}</h3>
-              <p className="mt-2 flex-1 text-sm text-slate-600">{s.description}</p>
-              <p className="mt-4 text-2xl font-bold text-slate-950">
-                {formatPricePence(s.priceGbp)}
-              </p>
-              <Link
-                href={`/book?service=${s.slug}`}
-                className="mt-4 inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-              >
-                Book now
-              </Link>
-            </div>
-          ))}
-        </div>
-        )}
-      </section>
-
-      {/* Trust strip */}
-      <section className="border-y border-slate-200 bg-white">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-10 sm:grid-cols-3 sm:px-6">
-          {[
-            {
-              title: "DVSA approved",
-              body: "MOT class 4 with fully qualified testers.",
-              icon: "🛡️",
-            },
-            {
-              title: "12-month warranty",
-              body: "On all parts and labour, no small print.",
-              icon: "🔧",
-            },
-            {
-              title: "Fair, upfront pricing",
-              body: "Written estimate before any work starts.",
-              icon: "💷",
-            },
-          ].map((f) => (
-            <div key={f.title} className="flex items-start gap-4">
-              <span className="text-3xl" aria-hidden>
-                {f.icon}
-              </span>
-              <div>
-                <p className="text-base font-semibold">{f.title}</p>
-                <p className="mt-1 text-sm text-slate-600">{f.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Google reviews */}
+      {/* ── Reviews ──────────────────────────────────────────────────── */}
       <GoogleReviews summary={reviews} />
+
+      {/* ── Closing CTA ──────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <div className="relative overflow-hidden rounded-3xl bg-carbon-950 px-6 py-14 text-center sm:px-12">
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-70"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 15% 20%, rgba(125,194,66,0.22), transparent 55%), radial-gradient(circle at 85% 85%, rgba(125,194,66,0.14), transparent 55%)",
+            }}
+          />
+          <div className="relative">
+            <h2 className="font-display text-4xl font-extrabold uppercase leading-tight text-white sm:text-5xl">
+              MOT due? <span className="text-brand-500">Book it today.</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-carbon-300">
+              Pick a service, choose a slot and you&apos;re done in under a
+              minute. Instant confirmation, no deposit, and a reminder before
+              your test is due.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/book"
+                className="rounded-md bg-brand-500 px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-carbon-950 shadow-lg shadow-brand-500/25 transition hover:bg-brand-400"
+              >
+                Book online
+              </Link>
+              <a
+                href={CONTACT.phoneHref}
+                className="rounded-md border border-white/25 px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:border-brand-500 hover:bg-white/5"
+              >
+                Call {CONTACT.phoneDisplay}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

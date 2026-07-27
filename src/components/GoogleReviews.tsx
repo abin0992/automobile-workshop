@@ -4,12 +4,12 @@ function Stars({ rating }: { rating: number }) {
   const full = Math.round(rating);
   return (
     <span
-      className="text-amber-400"
+      className="text-brand-500"
       aria-label={`${rating.toFixed(1)} out of 5 stars`}
       role="img"
     >
       {"★".repeat(full)}
-      <span className="text-slate-300">{"★".repeat(5 - full)}</span>
+      <span className="text-carbon-300">{"★".repeat(5 - full)}</span>
     </span>
   );
 }
@@ -47,25 +47,26 @@ export default function GoogleReviews({
   intro?: string;
 }) {
   return (
-    <section className="border-y border-slate-200 bg-slate-100/70">
+    <section className="border-y border-carbon-200 bg-carbon-100/60">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-sm font-medium uppercase tracking-wider text-amber-600">
+            <p className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-600">
+              <span aria-hidden className="h-px w-7 bg-brand-500" />
               Reviews
             </p>
-            <h2 className="mt-1 text-3xl font-bold text-slate-950">{heading}</h2>
-            <p className="mt-2 max-w-2xl text-slate-600">{intro}</p>
+            <h2 className="mt-3 font-display text-4xl font-extrabold uppercase tracking-tight text-carbon-950 sm:text-5xl">{heading}</h2>
+            <p className="mt-3 max-w-2xl text-carbon-600">{intro}</p>
           </div>
 
-          <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+          <div className="flex items-center gap-4 rounded-2xl border border-carbon-200 bg-white px-5 py-4 shadow-sm">
             <GoogleG />
             <div>
-              <p className="flex items-center gap-2 text-2xl font-bold leading-none text-slate-950">
+              <p className="flex items-center gap-2 font-display text-3xl font-extrabold leading-none text-carbon-950">
                 {summary.rating.toFixed(1)}
                 <Stars rating={summary.rating} />
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-carbon-500">
                 Based on {summary.total}+ Google reviews
               </p>
             </div>
@@ -76,18 +77,18 @@ export default function GoogleReviews({
           {summary.reviews.map((review) => (
             <figure
               key={`${review.author}-${review.relativeTime}`}
-              className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+              className="flex h-full flex-col rounded-2xl border border-carbon-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg"
             >
               <div className="flex items-center justify-between gap-3">
                 <Stars rating={review.rating} />
                 <GoogleG />
               </div>
-              <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-slate-700">
+              <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-carbon-700">
                 “{review.text}”
               </blockquote>
-              <figcaption className="mt-4 border-t border-slate-100 pt-3 text-sm">
-                <span className="font-semibold text-slate-900">{review.author}</span>
-                <span className="text-slate-500"> · {review.relativeTime}</span>
+              <figcaption className="mt-4 border-t border-carbon-100 pt-3 text-sm">
+                <span className="font-bold text-carbon-950">{review.author}</span>
+                <span className="text-carbon-500"> · {review.relativeTime}</span>
               </figcaption>
             </figure>
           ))}
@@ -98,7 +99,7 @@ export default function GoogleReviews({
             href={summary.url}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+            className="inline-flex items-center gap-2 rounded-md bg-carbon-950 px-5 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-brand-500 hover:text-carbon-950"
           >
             Read all reviews on Google →
           </a>
@@ -106,7 +107,7 @@ export default function GoogleReviews({
             href={`${summary.url}`}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+            className="inline-flex items-center gap-2 rounded-md border border-carbon-300 bg-white px-5 py-3 text-sm font-bold uppercase tracking-wide text-carbon-800 transition hover:border-brand-500 hover:text-brand-700"
           >
             Leave us a review
           </a>

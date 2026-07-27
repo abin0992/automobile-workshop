@@ -1,5 +1,69 @@
 @import "tailwindcss";
 
+/*
+  ── Marton Road MOT Centre — brand theme ──────────────────────────────────
+  Colours are sampled directly from the workshop's own signage and logo:
+
+    · The building is clad in near-black charcoal panelling.
+    · The fascia lettering and the logo's lower shield band are a bright
+      lime green (#7DC242 measured off the sign, corrected for the
+      overcast-day white balance).
+    · The shield body is a cool gunmetal grey with a chrome bevel.
+
+  Everything downstream references these tokens, so the whole site can be
+  re-tuned from this block alone.
+*/
+@theme {
+  /* Brand lime — from the fascia lettering + logo shield band */
+  --color-brand-50: #f3fbe9;
+  --color-brand-100: #e3f6cd;
+  --color-brand-200: #c8ed9f;
+  --color-brand-300: #a6e067;
+  --color-brand-400: #8ed44a;
+  --color-brand-500: #7dc242;
+  /*
+    brand-600 is the smallest text that carries the accent (the eyebrow
+    labels), so it is darkened past the lime of the sign until it clears
+    WCAG AA 4.5:1 on white. The hue is preserved, only the value drops.
+  */
+  --color-brand-600: #52802c;
+  --color-brand-700: #497727;
+  --color-brand-800: #3c5e25;
+  --color-brand-900: #335022;
+  --color-brand-950: #182c0e;
+
+  /* Carbon — the black cladding of the unit, warmed very slightly */
+  --color-carbon-50: #f5f7f7;
+  --color-carbon-100: #e6eaeb;
+  --color-carbon-200: #cfd6d8;
+  --color-carbon-300: #adb9bd;
+  --color-carbon-400: #84959a;
+  /* Meta/caption text on white — nudged to clear AA at small sizes. */
+  --color-carbon-500: #64767b;
+  --color-carbon-600: #59676d;
+  --color-carbon-700: #4c575c;
+  --color-carbon-800: #434b4f;
+  --color-carbon-900: #262d30;
+  --color-carbon-950: #14181a;
+
+  /* Chrome — the bevelled edge of the shield */
+  --color-chrome-300: #d7dfe1;
+  --color-chrome-400: #b8c4c7;
+  --color-chrome-500: #9aa8ac;
+
+  /*
+    Barlow Condensed mirrors the condensed lettering on the fascia and the
+    shield logo; Inter handles body copy. Both are self-hosted via Fontsource
+    (imported in layout.tsx), so there is no third-party font request.
+  */
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+  The marquee track is duplicated and shifted by exactly -50%, so the second
+  copy lands where the first began.
+*/
 @keyframes brand-marquee {
   from {
     transform: translateX(0);
@@ -7,4 +71,59 @@
   to {
     transform: translateX(-50%);
   }
+}
+
+/* Hero headline underline sweep */
+@keyframes brand-sweep {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  /*
+    A very low-contrast diagonal hatch, echoing the vertical seams of the
+    workshop's cladding. Sits behind the light page sections without ever
+    competing with text.
+  */
+  background-color: var(--color-carbon-50);
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgb(20 24 26 / 0.022) 0px,
+    rgb(20 24 26 / 0.022) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+}
+
+/*
+  Diagonal shear used on section dividers and the hero cut — the same angle
+  as the body hatch, so the geometry of the page stays consistent.
+*/
+.brand-skew {
+  --skew: -3deg;
+  transform: skewY(var(--skew));
+}
+.brand-skew > * {
+  transform: skewY(calc(var(--skew) * -1));
+}
+
+/* Focus ring in brand lime, applied globally for keyboard users. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }

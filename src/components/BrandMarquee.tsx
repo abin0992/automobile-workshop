@@ -47,7 +47,7 @@ export default function BrandMarquee({
             <li
               key={`${brand.name}-${i}`}
               aria-hidden={isDuplicate}
-              className={`mr-4 mb-0 flex h-16 w-40 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md motion-reduce:mb-4 ${
+              className={`mr-4 mb-0 flex h-16 w-40 shrink-0 items-center justify-center rounded-xl border border-carbon-200 bg-white px-3 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-400 hover:shadow-md motion-reduce:mb-4 ${
                 isDuplicate ? "motion-reduce:hidden" : ""
               }`}
             >

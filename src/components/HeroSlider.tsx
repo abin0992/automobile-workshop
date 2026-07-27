@@ -6,9 +6,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export type Slide = {
   src: string;
   alt: string;
+  /**
+   * Optional focal point. The shopfront photo has the signage in the upper
+   * third, so a plain `object-center` crop loses the logo on short viewports.
+   */
+  position?: string;
 };
 
-const INTERVAL_MS = 6000;
+const INTERVAL_MS = 6500;
 
 export default function HeroSlider({
   slides,
@@ -18,11 +23,7 @@ export default function HeroSlider({
   children?: React.ReactNode;
 }) {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  const [paused, setPaused] = useState(false);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const go = useCallback(
@@ -31,7 +32,11 @@ export default function HeroSlider({
   );
 
   useEffect(() => {
-    if (paused || slides.length < 2) return;
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced || paused || slides.length < 2) return;
+
     timer.current = setInterval(
       () => setIndex((i) => (i + 1) % slides.length),
       INTERVAL_MS,
@@ -43,13 +48,12 @@ export default function HeroSlider({
 
   return (
     <section
-      className="relative isolate overflow-hidden bg-slate-950 text-white"
+      className="relative isolate overflow-hidden bg-carbon-950 text-white"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
-      aria-label="Workshop photos"
+      aria-label="Marton Road MOT Centre workshop"
     >
-      {/* Background images */}
       <div aria-hidden className="absolute inset-0">
         {slides.map((slide, i) => (
           <div
@@ -64,39 +68,48 @@ export default function HeroSlider({
               fill
               priority={i === 0}
               sizes="100vw"
-              className={`object-cover ${i === index ? "scale-105" : "scale-100"} transition-transform duration-[7000ms] ease-out`}
+              style={{ objectPosition: slide.position ?? "center" }}
+              className={`object-cover motion-safe:transition-transform motion-safe:duration-[8000ms] motion-safe:ease-out ${
+                i === index ? "scale-105" : "scale-100"
+              }`}
             />
           </div>
         ))}
-        {/* Legibility overlays */}
-        <div className="absolute inset-0 bg-slate-950/70" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-slate-950/20" />
+
+        {/*
+          Legibility stack. The shopfront photo was taken on an overcast day,
+          so it is bright at the top — the gradient is weighted to the left
+          and bottom where the headline and stats sit.
+        */}
+        <div className="absolute inset-0 bg-carbon-950/72" />
+        <div className="absolute inset-0 bg-gradient-to-r from-carbon-950 via-carbon-950/80 to-carbon-950/35" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-carbon-950 to-transparent" />
+        {/* Brand-lime glow, tying the dark hero back to the signage */}
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-60"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.28), transparent 55%), radial-gradient(circle at 85% 70%, rgba(59,130,246,0.22), transparent 55%)",
+              "radial-gradient(circle at 12% 18%, rgba(125,194,66,0.20), transparent 52%), radial-gradient(circle at 88% 78%, rgba(125,194,66,0.10), transparent 55%)",
           }}
         />
       </div>
 
       <div className="relative">{children}</div>
 
-      {/* Controls */}
       <div className="relative mx-auto flex max-w-6xl items-center gap-3 px-4 pb-8 sm:px-6">
         <button
           type="button"
           onClick={() => go(index - 1)}
-          aria-label="Previous slide"
-          className="grid h-9 w-9 place-items-center rounded-full border border-white/25 bg-white/10 text-white transition hover:bg-white/20"
+          aria-label="Previous photo"
+          className="grid h-9 w-9 place-items-center rounded-full border border-white/25 bg-white/10 text-white transition hover:border-brand-500 hover:bg-brand-500 hover:text-carbon-950"
         >
           ‹
         </button>
         <button
           type="button"
           onClick={() => go(index + 1)}
-          aria-label="Next slide"
-          className="grid h-9 w-9 place-items-center rounded-full border border-white/25 bg-white/10 text-white transition hover:bg-white/20"
+          aria-label="Next photo"
+          className="grid h-9 w-9 place-items-center rounded-full border border-white/25 bg-white/10 text-white transition hover:border-brand-500 hover:bg-brand-500 hover:text-carbon-950"
         >
           ›
         </button>
@@ -106,10 +119,10 @@ export default function HeroSlider({
               key={slide.src}
               type="button"
               onClick={() => go(i)}
-              aria-label={`Go to slide ${i + 1}`}
+              aria-label={`Go to photo ${i + 1}`}
               aria-current={i === index}
               className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-8 bg-amber-400" : "w-4 bg-white/40 hover:bg-white/70"
+                i === index ? "w-8 bg-brand-500" : "w-4 bg-white/40 hover:bg-white/70"
               }`}
             />
           ))}

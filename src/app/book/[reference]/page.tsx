@@ -84,13 +84,13 @@ export default async function BookingDetailPage({
         </div>
       </div>
 
-      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
+      <section className="mt-6 rounded-2xl border border-carbon-200 bg-white p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
               Reference
             </p>
-            <p className="mt-1 font-mono text-lg font-bold text-slate-950">
+            <p className="mt-1 font-mono text-lg font-bold text-carbon-950">
               {bk.reference}
             </p>
           </div>
@@ -101,59 +101,59 @@ export default async function BookingDetailPage({
 
         <dl className="mt-6 grid gap-6 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <dt className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
               When
             </dt>
-            <dd className="mt-1 text-base font-semibold text-slate-900">
+            <dd className="mt-1 text-base font-semibold text-carbon-900">
               {formatDateLong(bk.bookingDate)}
             </dd>
-            <dd className="text-sm text-slate-600">
+            <dd className="text-sm text-carbon-600">
               at {formatTimeShort(bk.timeSlot)}
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <dt className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
               Where
             </dt>
-            <dd className="mt-1 text-base font-semibold text-slate-900">
+            <dd className="mt-1 text-base font-semibold text-carbon-900">
               Marton Road MOT Centre
             </dd>
-            <dd className="text-sm text-slate-600">
+            <dd className="text-sm text-carbon-600">
               416 Marton Rd, Middlesbrough TS4 2PT
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <dt className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
               Vehicle
             </dt>
-            <dd className="mt-1 text-base font-semibold text-slate-900">
+            <dd className="mt-1 text-base font-semibold text-carbon-900">
               {bk.vehicleReg}
             </dd>
-            <dd className="text-sm text-slate-600">{bk.vehicleDetails}</dd>
+            <dd className="text-sm text-carbon-600">{bk.vehicleDetails}</dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <dt className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
               Contact
             </dt>
-            <dd className="mt-1 text-base font-semibold text-slate-900">
+            <dd className="mt-1 text-base font-semibold text-carbon-900">
               {bk.customerName}
             </dd>
-            <dd className="text-sm text-slate-600">
+            <dd className="text-sm text-carbon-600">
               {bk.phone} · {bk.email}
             </dd>
           </div>
         </dl>
 
-        <div className="mt-6 border-t border-slate-100 pt-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <div className="mt-6 border-t border-carbon-100 pt-6">
+          <p className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
             Work booked
           </p>
-          <ul className="mt-3 divide-y divide-slate-100">
+          <ul className="mt-3 divide-y divide-carbon-100">
             {svc && (
               <li className="flex items-center justify-between py-3">
                 <div>
-                  <p className="font-medium text-slate-900">{svc.name}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="font-medium text-carbon-900">{svc.name}</p>
+                  <p className="text-xs text-carbon-500">
                     Approx. {formatDuration(svc.durationMinutes)}
                   </p>
                 </div>
@@ -163,13 +163,13 @@ export default async function BookingDetailPage({
             {addon && (
               <li className="flex items-center justify-between py-3">
                 <div>
-                  <p className="font-medium text-slate-900">
+                  <p className="font-medium text-carbon-900">
                     {addon.name}
-                    <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                    <span className="ml-2 rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
                       Add-on
                     </span>
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-carbon-500">
                     Approx. {formatDuration(addon.durationMinutes)}
                   </p>
                 </div>
@@ -179,20 +179,20 @@ export default async function BookingDetailPage({
               </li>
             )}
           </ul>
-          <div className="mt-4 flex items-baseline justify-between border-t border-slate-100 pt-4">
-            <span className="text-sm font-semibold text-slate-500">
+          <div className="mt-4 flex items-baseline justify-between border-t border-carbon-100 pt-4">
+            <span className="text-sm font-semibold text-carbon-500">
               Estimated total
             </span>
-            <span className="text-2xl font-bold text-slate-950">
+            <span className="text-2xl font-bold text-carbon-950">
               {formatPricePence(total)}
             </span>
           </div>
           {bk.notes && (
-            <div className="mt-4 rounded-md bg-slate-50 p-3 text-sm">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <div className="mt-4 rounded-md bg-carbon-50 p-3 text-sm">
+              <p className="text-xs font-semibold uppercase tracking-wider text-carbon-500">
                 Your notes
               </p>
-              <p className="mt-1 text-slate-700">{bk.notes}</p>
+              <p className="mt-1 text-carbon-700">{bk.notes}</p>
             </div>
           )}
         </div>
@@ -200,16 +200,16 @@ export default async function BookingDetailPage({
 
       {/* MOT upsell zone */}
       {canUpsell && interimSvc && fullSvc && (
-        <section className="mt-6 rounded-2xl border border-amber-300 bg-gradient-to-br from-amber-50 to-white p-6">
+        <section className="mt-6 rounded-2xl border border-brand-400 bg-gradient-to-br from-brand-50 to-white p-6">
           <div className="flex items-start gap-3">
             <span className="text-2xl" aria-hidden>
               💡
             </span>
             <div className="flex-1">
-              <h2 className="text-lg font-bold text-amber-950">
+              <h2 className="text-lg font-bold text-brand-950">
                 While your car is here…
               </h2>
-              <p className="mt-1 text-sm text-amber-900/80">
+              <p className="mt-1 text-sm text-brand-800/80">
                 Add a service to your MOT visit and we&apos;ll take care of both
                 in a single trip. You can change or remove this any time before
                 your slot.
@@ -240,13 +240,13 @@ export default async function BookingDetailPage({
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/"
-          className="rounded-md border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+          className="rounded-md border border-carbon-300 px-4 py-2.5 text-sm font-semibold text-carbon-700 hover:bg-carbon-100"
         >
           Back to home
         </Link>
         <Link
           href="/services"
-          className="rounded-md border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+          className="rounded-md border border-carbon-300 px-4 py-2.5 text-sm font-semibold text-carbon-700 hover:bg-carbon-100"
         >
           See all services
         </Link>
