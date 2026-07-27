@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: CONTACT.name,
     title: `${CONTACT.name} — MOT, Servicing & Tyres in Middlesbrough`,
     description:
-      "Independent DVSA-approved garage on Marton Road, Middlesbrough. Fixed prices, 12-month warranty, book online.",
+      "Independent DVSA-approved garage on Marton Road, Middlesbrough. Fixed prices, 6-month warranty, book online.",
     images: [{ url: "/images/workshop/shopfront-wide.jpg", width: 1600, height: 1200, alt: `${CONTACT.name} on Marton Road` }],
   },
   icons: {

@@ -90,7 +90,7 @@ export default async function ServicesPage() {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-3 sm:px-6">
           {[
             ["Written estimate first", "You approve the price before we start. If the job changes, we ring you."],
-            ["12-month warranty", "Parts and labour, 12 months or 12,000 miles, whichever comes first."],
+            ["6-month warranty", "Parts and labour, 6 months or 6,000 miles, whichever comes first."],
             ["No hidden extras", "Prices include VAT, disposal and consumables. What we quote is what you pay."],
           ].map(([title, body]) => (
             <div key={title}>

@@ -25,8 +25,8 @@ Then open <http://localhost:3000>.
 seeds the service catalogue, builds the app and serves it. Press `Ctrl-C` to
 stop everything.
 
-Already have a **Supabase** database? See
-[Running against Supabase](#running-against-supabase) instead.
+Using **Neon**? See [Running against Neon](#running-against-neon).
+Using **Supabase**? See [Running against Supabase](#running-against-supabase).
 
 While you're iterating on the design, use the hot-reloading version instead:
 
@@ -60,6 +60,89 @@ echo 'DATABASE_URL=postgresql://user:password@localhost:5432/your_db' > .env.loc
 npx drizzle-kit push   # create the tables
 npm run dev
 ```
+
+---
+
+## Running against Neon
+
+[Neon](https://neon.com) is serverless PostgreSQL. The app talks to it over the
+ordinary Postgres wire protocol, so no application code changes — you only need
+the connection string.
+
+### 1. Copy your connection string
+
+In the Neon console open **Dashboard → Connect** and copy the URI. It looks
+like:
+
+```
+postgresql://<user>:<password>@ep-<id>-pooler.<region>.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+```
+
+Neon offers two hosts, and the difference matters:
+
+| Host                      | Use it for                                            |
+| ------------------------- | ----------------------------------------------------- |
+| `ep-<id>-pooler...`       | **The running app.** PgBouncer-backed, handles many short-lived serverless connections. |
+| `ep-<id>...` (no `-pooler`) | **Schema migrations.** The pooler does not support every statement `drizzle-kit` issues. |
+
+### 2. Create `.env.local`
+
+```bash
+DATABASE_URL="postgresql://<user>:<password>@ep-<id>-pooler.<region>.aws.neon.tech/neondb?sslmode=require"
+```
+
+Wrap it **in double quotes** — Neon passwords can contain `#` and `&`, which
+otherwise truncate the value.
+
+### 3. Create the tables
+
+Run this against the **unpooled** host:
+
+```bash
+DATABASE_URL="postgresql://<user>:<password>@ep-<id>.<region>.aws.neon.tech/neondb?sslmode=require" \
+  npx drizzle-kit push
+```
+
+### 4. Run the app
+
+```bash
+npm run dev
+```
+
+### A note on TLS
+
+Neon requires TLS. `pg` does **not** enable it from the connection string
+alone: `?sslmode=require` is parsed into an empty `ssl: {}` object, which
+encrypts the connection but skips certificate verification.
+
+`src/db/index.ts` therefore configures TLS explicitly — certificate
+verification is on for any non-local host, and off only for `localhost` (the
+embedded preview database speaks plain TCP). Append `?sslmode=no-verify` if you
+genuinely need to skip verification, e.g. behind a proxy with a self-signed
+certificate.
+
+### Preview branch per pull request
+
+`.github/workflows/neon-preview-branch.yml` gives every PR its own isolated
+copy of the database:
+
+- **PR opened / updated** — creates a Neon branch `preview/pr-<n>-<branch>`,
+  applies `src/db/schema.ts` to it with `drizzle-kit push`, and comments the
+  schema diff on the PR.
+- **PR closed** — deletes the branch.
+
+Branches also carry a 14-day expiry, so an abandoned PR cannot quietly consume
+the project's branch quota.
+
+Configure once in **Settings → Secrets and variables → Actions**:
+
+| Kind     | Name              | Value                                     |
+| -------- | ----------------- | ----------------------------------------- |
+| Variable | `NEON_PROJECT_ID` | Your Neon project ID                      |
+| Secret   | `NEON_API_KEY`    | A Neon API key with access to that project |
+
+The per-branch connection string is a workflow output containing credentials —
+never `echo` it or write it into the build log.
 
 ---
 

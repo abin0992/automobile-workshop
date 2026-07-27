@@ -12,7 +12,7 @@ import {
 export const metadata = {
   title: "About us",
   description:
-    "An independent, family-run MOT and service centre on Marton Road, Middlesbrough. DVSA-approved, fixed prices and a 12-month warranty on every job.",
+    "An independent, family-run MOT and service centre on Marton Road, Middlesbrough. DVSA-approved, fixed prices and a 6-month warranty on every job.",
 };
 
 const STATS = [
@@ -25,7 +25,7 @@ const STATS = [
 const PROMISES = [
   "We call you before starting any work you haven't already approved.",
   "Every job comes with an itemised invoice showing parts, labour and VAT.",
-  "All work is covered by a 12-month / 12,000-mile parts-and-labour warranty.",
+  "All work is covered by a 6-month / 6,000-mile parts-and-labour warranty.",
   "We fit OEM or OEM-equivalent parts unless you specifically ask otherwise.",
   "You're welcome to use the MOT viewing area and watch your test.",
   "Old parts are kept aside for you to see — nothing is replaced 'just in case'.",

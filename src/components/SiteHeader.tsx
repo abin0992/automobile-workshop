@@ -77,16 +77,22 @@ export default function SiteHeader() {
             className="flex shrink-0 items-center gap-3"
             aria-label="Marton Road MOT Centre — home"
           >
+            {/*
+              The compact lockup (shield + car + M.R/MOT, without the long
+              "Marton Road MOT Centre" strapline) is used here: at header size
+              the full wordmark renders as an illegible smudge, so the
+              strapline is set as live text alongside it instead.
+            */}
             <Image
-              src="/images/brand/logo.png"
+              src="/images/brand/logo-compact.png"
               alt="Marton Road MOT Centre"
-              width={629}
+              width={556}
               height={480}
               priority
-              className="h-11 w-auto sm:h-14"
+              className="h-12 w-auto sm:h-16"
             />
             <span className="hidden leading-tight sm:block">
-              <span className="block font-display text-base font-extrabold uppercase tracking-wide text-white">
+              <span className="block font-display text-lg font-extrabold uppercase tracking-wide text-white">
                 Marton Road
               </span>
               <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-brand-500">
